@@ -1,0 +1,38 @@
+module                  ::= declaration* EOF
+
+declaration             ::= function_declaration
+
+function_declaration    ::= "func" IDENT "(" parameter_list? ")" type? block
+
+parameter_list          ::= variable ( "," variable )*
+
+variable                ::= IDENT type
+
+type                    ::= "int" | "float"
+
+block                   ::= "{" statement* "}"
+
+statement               ::= block
+                          | "return" expression? ";"
+                          | expression ";"
+
+expression              ::= var_declaration | assign_expression
+
+var_declaration         ::= "var" variable ( "=" expression )?
+                          | "const" IDENT type? "=" expression
+
+assign_expression       ::= add_expression ( "=" add_expression )*
+
+add_expression          ::= multiply_expression ( ( "+" | "-" ) multiply_expression )*
+
+multiply_expression     ::= unary_expression ( ( "*" | "/" | "%" ) unary_expression )*
+
+unary_expression        ::= ( "!" | "-" ) unary_expression | call_expression
+
+call_expression         ::= primary_expression call*
+
+primary_expression      ::= INT | FLOAT | IDENT | "(" expression ")"
+
+call                    ::= "(" expression_list? ")"
+
+expression_list         ::= expression ( "," expression )*

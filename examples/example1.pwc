@@ -1,0 +1,12 @@
+
+// example1.pwc
+
+func add(x float, y float) float {
+	return x + y
+}
+
+func main() {
+	var z float
+	z = add(1, 2)
+	println(z)
+}
