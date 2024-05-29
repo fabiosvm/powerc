@@ -8,9 +8,88 @@
 // located in the root directory of this project.
 //
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "buffer.h"
+#include "lexer.h"
 
-int main(void)
+static inline void print_usage(char *cmd);
+static inline void load_file(Buffer *buf, char *file);
+static inline FILE *open_file(char *file);
+static inline size_t file_size(FILE *fp);
+static inline void print_tokens(Lexer *lex);
+
+static inline void print_usage(char *cmd)
 {
+  printf("\nUsage: %s <input-file>\n", cmd);
+}
+
+static inline void load_file(Buffer *buf, char *file)
+{
+  FILE *fp = open_file(file);
+  size_t size = file_size(fp);
+  size_t count = size + 1;
+  buffer_init_with_capacity(buf, count);
+  buf->count = count;
+  memset(buf->data, 0, count);
+  fread(buf->data, 1, size, fp);
+  fclose(fp);
+}
+
+static inline FILE *open_file(char *file)
+{
+  FILE *fp = NULL;
+#ifdef _WIN32
+  fopen_s(&fp, file, "r");
+#else
+  fp = fopen(file, "r");
+#endif
+  if (!file)
+  {
+    fprintf(stderr, "\nERROR: cannot open file %s\n", file);
+    exit(EXIT_FAILURE);
+  }
+  return fp;
+}
+
+static inline size_t file_size(FILE *fp)
+{
+  fseek(fp, 0, SEEK_END);
+  size_t size = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+  return size;
+}
+
+static inline void print_tokens(Lexer *lex)
+{
+  int i = 0;
+  Token token = lex->token;
+  while (token.kind != TOKEN_KIND_EOF)
+  {
+    printf("%04d %-10s %-10.*s %4d,%-4d", i++, token_kind_name(token.kind),
+      token.length, token.chars, token.ln, token.col);
+    if (!(i % 4)) printf("\n");
+    lexer_next(lex);
+    token = lex->token;
+  }
+  printf("%04d %-10s %-10s %4d,%-4d\n", i, token_kind_name(token.kind),
+    "", token.ln, token.col);
+}
+
+int main(int argc, char *argv[])
+{
+  if (argc < 2)
+  {
+    fprintf(stderr, "\nERROR: no input file\n");
+    print_usage(argv[0]);
+    return EXIT_FAILURE;
+  }
+  char *file = argv[1];
+  Buffer buf;
+  load_file(&buf, argv[1]);
+  Lexer lex;
+  lexer_init(&lex, file, buf.data);
+  print_tokens(&lex);
   return EXIT_SUCCESS;
 }

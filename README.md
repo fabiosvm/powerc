@@ -84,7 +84,7 @@ Now, you can compile an example by typing the following command:
 build/powerc examples/fib.pwc
 ```
 
-> **Note:** Currently, the compiler does nothing.
+> **Note:** Currently, the compiler just prints the tokens of the source code.
 
 ## Cleaning
 
@@ -102,7 +102,7 @@ Check the [docs/powerc.ebnf](docs/powerc.ebnf) file for the current PowerC gramm
 
 The roadmap for the project is:
 
-- [ ] Lexer
+- [x] Lexer
 - [ ] Abstract Syntax Tree
 - [ ] Parser
 - [ ] Type Checker
