@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "buffer.h"
-#include "lexer.h"
+#include "parser.h"
 
 static inline void print_usage(char *cmd);
 static inline void load_file(Buffer *buf, char *file);
@@ -88,8 +88,11 @@ int main(int argc, char *argv[])
   char *file = argv[1];
   Buffer buf;
   load_file(&buf, argv[1]);
-  Lexer lex;
-  lexer_init(&lex, file, buf.data);
-  print_tokens(&lex);
+  Parser parser;
+  parser_init(&parser, file, buf.data);
+  print_tokens(&parser.lex);
+  parser_init(&parser, file, buf.data);
+  parser_parse(&parser);
+  printf("INFO: syntax is ok\n");
   return EXIT_SUCCESS;
 }

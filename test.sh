@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-build/powerc examples/fib.pwc
+build/powerc examples/arith.pwc

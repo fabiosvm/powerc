@@ -8,10 +8,12 @@ param           ::= IDENT type
 type            ::= "Void" | "Bool" | "Int" | "UInt" | "Float"
 
 stmt            ::= "var" IDENT type ( "=" expr )? ";"
-                  | IDENT "=" expr ";"
                   | "return" expr? ";"
+                  | expr ";"
 
-expr            ::= and_expr ( "||" and_expr )*
+expr            ::= or_expr ( "=" expr )?
+
+or_expr         ::= and_expr ( "||" and_expr )*
 
 and_expr        ::= eq_expr ( "&&" eq_expr )*
 

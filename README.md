@@ -18,11 +18,6 @@ fn fib(n Int) Int {
   }
   return fib(n - 1) + fib(n - 2);
 }
-
-fn main() Int {
-  println(fib(10));
-  return 0;
-}
 ```
 
 ## What features does this language aim to include?
@@ -81,10 +76,10 @@ After building, you can run the tests by typing the following command:
 Now, you can compile an example by typing the following command:
 
 ```
-build/powerc examples/fib.pwc
+build/powerc examples/arith.pwc
 ```
 
-> **Note:** Currently, the compiler just prints the tokens of the source code.
+> **Note:** Currently, the compiler just prints the tokens and recognizes the syntax.
 
 ## Cleaning
 
@@ -103,8 +98,8 @@ Check the [docs/powerc.ebnf](docs/powerc.ebnf) file for the current PowerC gramm
 The roadmap for the project is:
 
 - [x] Lexer
+- [x] Parser
 - [ ] Abstract Syntax Tree
-- [ ] Parser
 - [ ] Type Checker
 - [ ] Code Generator
 - [ ] Standard Library

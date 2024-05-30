@@ -1,3 +1,3 @@
 @echo off
 
-build\Debug\powerc examples\fib.pwc
+build\Debug\powerc examples\arith.pwc

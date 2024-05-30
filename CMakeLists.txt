@@ -17,4 +17,5 @@ add_executable("${PROJECT_NAME}"
   "src/buffer.c"
   "src/compiler.c"
   "src/lexer.c"
+  "src/parser.c"
 )
