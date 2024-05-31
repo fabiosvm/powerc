@@ -11,7 +11,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "lexer.h"
+#include "ast.h"
 
 typedef struct
 {
@@ -19,6 +19,6 @@ typedef struct
 } Parser;
 
 void parser_init(Parser *parser, char *file, char *source);
-void parser_parse(Parser *parser);
+AstNode *parser_parse(Parser *parser);
 
 #endif // PARSER_H

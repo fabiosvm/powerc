@@ -79,7 +79,7 @@ Now, you can compile an example by typing the following command:
 build/powerc examples/arith.pwc
 ```
 
-> **Note:** Currently, the compiler just prints the tokens and recognizes the syntax.
+> **Note:** Currently, the compiler just prints the tokens and the AST.
 
 ## Cleaning
 
@@ -99,7 +99,7 @@ The roadmap for the project is:
 
 - [x] Lexer
 - [x] Parser
-- [ ] Abstract Syntax Tree
+- [x] Abstract Syntax Tree
 - [ ] Type Checker
 - [ ] Code Generator
 - [ ] Standard Library

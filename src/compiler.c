@@ -64,17 +64,17 @@ static inline size_t file_size(FILE *fp)
 static inline void print_tokens(Lexer *lex)
 {
   int i = 0;
-  Token token = lex->token;
-  while (token.kind != TOKEN_KIND_EOF)
+  Token *token = &lex->token;
+  while (token->kind != TOKEN_KIND_EOF)
   {
-    printf("%04d %-10s %-10.*s %4d,%-4d", i++, token_kind_name(token.kind),
-      token.length, token.chars, token.ln, token.col);
+    printf("%04d %-10s %-10.*s %4d,%-4d", i++, token_kind_name(token->kind),
+      token->length, token->chars, token->ln, token->col);
     if (!(i % 4)) printf("\n");
     lexer_next(lex);
-    token = lex->token;
+    token = &lex->token;
   }
-  printf("%04d %-10s %-10s %4d,%-4d\n", i, token_kind_name(token.kind),
-    "", token.ln, token.col);
+  printf("%04d %-10s %-10s %4d,%-4d\n", i, token_kind_name(token->kind),
+    "", token->ln, token->col);
 }
 
 int main(int argc, char *argv[])
@@ -89,10 +89,13 @@ int main(int argc, char *argv[])
   Buffer buf;
   load_file(&buf, argv[1]);
   Parser parser;
+  printf("Tokens:\n\n");
   parser_init(&parser, file, buf.data);
   print_tokens(&parser.lex);
+  printf("\n");
+  printf("Abstract Syntax Tree:\n\n");
   parser_init(&parser, file, buf.data);
-  parser_parse(&parser);
-  printf("INFO: syntax is ok\n");
+  AstNode *ast = parser_parse(&parser);
+  ast_print(ast);
   return EXIT_SUCCESS;
 }

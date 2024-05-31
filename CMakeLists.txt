@@ -14,6 +14,7 @@ else()
 endif()
 
 add_executable("${PROJECT_NAME}"
+  "src/ast.c"
   "src/buffer.c"
   "src/compiler.c"
   "src/lexer.c"
