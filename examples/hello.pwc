@@ -1,0 +1,6 @@
+
+// hello.pwc
+
+fn main() {
+  println("Hello, world!");
+}

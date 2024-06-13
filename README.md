@@ -12,7 +12,7 @@ PowerC is a high-level programming language that transpiles to C.
 Here is a classic fibonacci function in PowerC:
 
 ```rs
-fn fib(n Int) Int {
+fn fib(n: Int) -> Int {
   if n < 2 {
     return n;
   }
@@ -30,8 +30,7 @@ The main features of the language are:
 - Sound null safety
 - Mutable Value Semantics
 - UTF-8 Strings
-- First-Class Functions
-- Closure (Capturing Values)
+- Closures
 - Structs and Enums
 - Methods
 - Traits
@@ -76,10 +75,10 @@ After building, you can run the tests by typing the following command:
 Now, you can compile an example by typing the following command:
 
 ```
-build/powerc examples/arith.pwc
+build/powerc examples/hello.pwc
 ```
 
-> **Note:** Currently, the compiler just prints the tokens and the AST.
+> **Note:** Currently, the compiler just prints the AST.
 
 ## Cleaning
 
@@ -100,6 +99,7 @@ The roadmap for the project is:
 - [x] Lexer
 - [x] Parser
 - [x] Abstract Syntax Tree
+- [ ] Symbol Table
 - [ ] Type Checker
 - [ ] Code Generator
 - [ ] Standard Library

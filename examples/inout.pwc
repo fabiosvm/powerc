@@ -1,0 +1,12 @@
+
+// inout.pwc
+
+fn mutate(x: inout Int) {
+  x = 2;
+}
+
+fn main() {
+  var a: Int = 1;
+  mutate(&a);
+  println(a); // 2
+}

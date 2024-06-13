@@ -1,0 +1,11 @@
+
+// closure.pwc
+
+fn main() {
+  var a: String = "Hello";
+  var f: fn ();
+  f = fn () {
+    println(a);
+  };
+  f(); // Hello
+}

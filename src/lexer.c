@@ -28,6 +28,8 @@ static inline bool match_char(Lexer *lex, char c, TokenKind kind);
 static inline bool match_chars(Lexer *lex, const char *chars, TokenKind kind);
 static inline bool match_keyword(Lexer *lex, const char *kw, TokenKind kind);
 static inline bool match_number(Lexer *lex);
+static inline bool match_rune(Lexer *lex);
+static inline bool match_string(Lexer *lex);
 static inline bool match_ident(Lexer *lex);
 static inline Token token(Lexer *lex, TokenKind kind, int length, char *chars);
 static inline void lexical_error(Lexer *lex, const char *fmt, ...);
@@ -154,6 +156,42 @@ end:
   return true;
 }
 
+static inline bool match_rune(Lexer *lex)
+{
+  if (current_char(lex) != '\'')
+    return false;
+  if (current_char(lex) == '\'')
+    return false;
+  if (char_at(lex, 1) == '\0')
+    lexical_error(lex, "unclosed rune literal");
+  if (char_at(lex, 2) != '\'')
+    return false;
+  lex->token = token(lex, TOKEN_KIND_RUNE, 1, &lex->curr[1]);
+  next_chars(lex, 3);
+  return true;
+}
+
+static inline bool match_string(Lexer *lex)
+{
+  if (current_char(lex) != '\"')
+    return false;
+  int length = 1;
+  for (;;)
+  {
+    if (char_at(lex, length) == '\"')
+    {
+      ++length;
+      break;
+    }
+    if (char_at(lex, length) == '\0')
+      lexical_error(lex, "unclosed string literal");
+    ++length;
+  }
+  lex->token = token(lex, TOKEN_KIND_STRING, length - 2, &lex->curr[1]);
+  next_chars(lex, length);
+  return true;
+}
+
 static inline bool match_ident(Lexer *lex)
 {
   if (current_char(lex) != '_' && !isalpha(current_char(lex)))
@@ -196,6 +234,7 @@ const char *token_kind_name(TokenKind kind)
   {
   case TOKEN_KIND_EOF:       name = "Eof";       break;
   case TOKEN_KIND_COMMA:     name = "Comma";     break;
+  case TOKEN_KIND_COLON:     name = "Colon";     break;
   case TOKEN_KIND_SEMICOLON: name = "Semicolon"; break;
   case TOKEN_KIND_LPAREN:    name = "LParen";    break;
   case TOKEN_KIND_RPAREN:    name = "RParen";    break;
@@ -203,6 +242,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_RBRACE:    name = "RBrace";    break;
   case TOKEN_KIND_PIPEPIPE:  name = "PipePipe";  break;
   case TOKEN_KIND_AMPAMP:    name = "AmpAmp";    break;
+  case TOKEN_KIND_AMP:       name = "Amp";       break;
   case TOKEN_KIND_EQEQ:      name = "EqEq";      break;
   case TOKEN_KIND_EQ:        name = "Eq";        break;
   case TOKEN_KIND_BANGEQ:    name = "BangEq";    break;
@@ -212,22 +252,30 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_GE:        name = "Ge";        break;
   case TOKEN_KIND_GT:        name = "Gt";        break;
   case TOKEN_KIND_PLUS:      name = "Plus";      break;
+  case TOKEN_KIND_ARROW:     name = "Arrow";     break;
   case TOKEN_KIND_MINUS:     name = "Minus";     break;
   case TOKEN_KIND_STAR:      name = "Star";      break;
   case TOKEN_KIND_SLASH:     name = "Slash";     break;
   case TOKEN_KIND_PERCENT:   name = "Percent";   break;
   case TOKEN_KIND_INT:       name = "Int";       break;
   case TOKEN_KIND_FLOAT:     name = "Float";     break;
+  case TOKEN_KIND_RUNE:      name = "Rune";      break;
+  case TOKEN_KIND_STRING:    name = "String";    break;
   case TOKEN_KIND_BOOL_KW:   name = "BoolKw";    break;
+  case TOKEN_KIND_BYTE_KW:   name = "ByteKw";    break;
+  case TOKEN_KIND_ELSE_KW:   name = "ElseKw";    break;
   case TOKEN_KIND_FALSE_KW:  name = "FalseKw";   break;
   case TOKEN_KIND_FLOAT_KW:  name = "FloatKw";   break;
   case TOKEN_KIND_FN_KW:     name = "FnKw";      break;
+  case TOKEN_KIND_IF_KW:     name = "IfKw";      break;
+  case TOKEN_KIND_INOUT_KW:  name = "InoutKw";   break;
   case TOKEN_KIND_INT_KW:    name = "IntKw";     break;
   case TOKEN_KIND_RETURN_KW: name = "ReturnKw";  break;
+  case TOKEN_KIND_RUNE_KW:   name = "RuneKw";    break;
+  case TOKEN_KIND_STRING_KW: name = "StringKw";  break;
   case TOKEN_KIND_TRUE_KW:   name = "TrueKw";    break;
   case TOKEN_KIND_UINT_KW:   name = "UIntKw";    break;
   case TOKEN_KIND_VAR_KW:    name = "VarKw";     break;
-  case TOKEN_KIND_VOID_KW:   name = "VoidKw";    break;
   case TOKEN_KIND_IDENT:     name = "Ident";     break;
   }
   assert(name);
@@ -250,12 +298,14 @@ void lexer_next(Lexer *lex)
   if (match_char(lex, 0, TOKEN_KIND_EOF)) return;
   if (match_char(lex, ',', TOKEN_KIND_COMMA)) return;
   if (match_char(lex, ';', TOKEN_KIND_SEMICOLON)) return;
+  if (match_char(lex, ':', TOKEN_KIND_COLON)) return;
   if (match_char(lex, '(', TOKEN_KIND_LPAREN)) return;
   if (match_char(lex, ')', TOKEN_KIND_RPAREN)) return;
   if (match_char(lex, '{', TOKEN_KIND_LBRACE)) return;
   if (match_char(lex, '}', TOKEN_KIND_RBRACE)) return;
   if (match_chars(lex, "||", TOKEN_KIND_PIPEPIPE)) return;
   if (match_chars(lex, "&&", TOKEN_KIND_AMPAMP)) return;
+  if (match_char(lex, '&', TOKEN_KIND_AMP)) return;
   if (match_chars(lex, "==", TOKEN_KIND_EQEQ)) return;
   if (match_char(lex, '=', TOKEN_KIND_EQ)) return;
   if (match_chars(lex, "!=", TOKEN_KIND_BANGEQ)) return;
@@ -265,21 +315,29 @@ void lexer_next(Lexer *lex)
   if (match_chars(lex, ">=", TOKEN_KIND_GE)) return;
   if (match_char(lex, '>', TOKEN_KIND_GT)) return;
   if (match_char(lex, '+', TOKEN_KIND_PLUS)) return;
+  if (match_chars(lex, "->", TOKEN_KIND_ARROW)) return;
   if (match_char(lex, '-', TOKEN_KIND_MINUS)) return;
   if (match_char(lex, '*', TOKEN_KIND_STAR)) return;
   if (match_char(lex, '/', TOKEN_KIND_SLASH)) return;
   if (match_char(lex, '%', TOKEN_KIND_PERCENT)) return;
   if (match_number(lex)) return;
+  if (match_rune(lex)) return;
+  if (match_string(lex)) return;
   if (match_keyword(lex, "Bool", TOKEN_KIND_BOOL_KW)) return;
+  if (match_keyword(lex, "Byte", TOKEN_KIND_BYTE_KW)) return;
+  if (match_keyword(lex, "else", TOKEN_KIND_ELSE_KW)) return;
   if (match_keyword(lex, "false", TOKEN_KIND_FALSE_KW)) return;
   if (match_keyword(lex, "Float", TOKEN_KIND_FLOAT_KW)) return;
   if (match_keyword(lex, "fn", TOKEN_KIND_FN_KW)) return;
+  if (match_keyword(lex, "if", TOKEN_KIND_IF_KW)) return;
+  if (match_keyword(lex, "inout", TOKEN_KIND_INOUT_KW)) return;
   if (match_keyword(lex, "Int", TOKEN_KIND_INT_KW)) return;
   if (match_keyword(lex, "return", TOKEN_KIND_RETURN_KW)) return;
+  if (match_keyword(lex, "Rune", TOKEN_KIND_RUNE_KW)) return;
+  if (match_keyword(lex, "String", TOKEN_KIND_STRING_KW)) return;
   if (match_keyword(lex, "true", TOKEN_KIND_TRUE_KW)) return;
   if (match_keyword(lex, "UInt", TOKEN_KIND_UINT_KW)) return;
   if (match_keyword(lex, "var", TOKEN_KIND_VAR_KW)) return;
-  if (match_keyword(lex, "Void", TOKEN_KIND_VOID_KW)) return;
   if (match_ident(lex)) return;
   char c = current_char(lex);
   c = isprint(c) ? c : '?';

@@ -1,18 +1,18 @@
 
 // arith.pwc
 
-fn square(x Int) Int {
+fn square(x: Int) -> Int {
   return x * x;
 }
 
-fn addOne(x Int) Int {
+fn add_one(x: Int) -> Int {
   return x + 1;
 }
 
-fn main() Int {
-  var a Int = 3;
-  var b Int;
-  b = addOne(square(a));
+fn main() -> Int {
+  var a: Int = 3;
+  var b: Int;
+  b = add_one(square(a));
   println(b); // 10
   return 0;
 }

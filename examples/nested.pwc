@@ -1,0 +1,15 @@
+
+// nested.pwc
+
+fn main() {
+  fn f() {
+    fn g() {
+      fn h() {
+        println("h");
+      }
+      h();
+    }
+    g();
+  }
+  f();
+}
