@@ -28,11 +28,12 @@ static inline void node_print(AstNode *node, int level)
   switch (kind)
   {
   case AST_NODE_KIND_MODULE:
+  case AST_NODE_KIND_TYPE_DECL:
+  case AST_NODE_KIND_VAR_DECL:
   case AST_NODE_KIND_FUNC_DECL:
   case AST_NODE_KIND_PARAMS:
   case AST_NODE_KIND_INOUT_PARAM:
   case AST_NODE_KIND_REF:
-  case AST_NODE_KIND_VAR_DECL:
   case AST_NODE_KIND_FUNC_TYPE:
   case AST_NODE_KIND_BLOCK:
   case AST_NODE_KIND_ASSIGN:
@@ -95,11 +96,12 @@ const char *ast_node_kind_name(AstNodeKind kind)
   switch (kind)
   {
   case AST_NODE_KIND_MODULE:      name = "Module";     break;
+  case AST_NODE_KIND_TYPE_DECL:   name = "TypeDecl";   break;
+  case AST_NODE_KIND_VAR_DECL:    name = "VarDecl";    break;
   case AST_NODE_KIND_FUNC_DECL:   name = "FuncDecl";   break;
   case AST_NODE_KIND_PARAMS:      name = "Params";     break;
   case AST_NODE_KIND_INOUT_PARAM: name = "InoutParam"; break;
   case AST_NODE_KIND_REF:         name = "Ref";        break;
-  case AST_NODE_KIND_VAR_DECL:    name = "VarDecl";    break;
   case AST_NODE_KIND_BOOL_TYPE:   name = "BoolType";   break;
   case AST_NODE_KIND_BYTE_TYPE:   name = "ByteType";   break;
   case AST_NODE_KIND_INT_TYPE:    name = "IntType";    break;

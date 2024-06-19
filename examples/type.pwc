@@ -1,0 +1,10 @@
+
+// type.pwc
+
+type Currency = Float;
+
+fn main() {
+  var a: Currency;
+  a = 1.99;
+  println(a); // 1.99
+}

@@ -1,7 +1,13 @@
 
 module          ::= decl* EOF
 
-decl            ::= var_decl | func_decl
+decl            ::= type_decl | var_decl | func_decl
+
+type_decl       ::= "type" IDENT "=" type ";"
+
+type            ::= "Bool" | "Byte" | "Int" | "UInt" | "Float" | "Rune" | "String"
+                  | "fn" "(" ( param_type ( "," param_type )* )? ")" ( "->" type )?
+                  | IDENT
 
 var_decl        ::= "var" IDENT ":" type ( "=" expr )? ";"
 
@@ -13,12 +19,10 @@ param           ::= IDENT ":" param_type
 
 param_type      ::= "inout"? type
 
-type            ::= "Bool" | "Byte" | "Int" | "UInt" | "Float" | "Rune" | "String"
-                  | "fn" "(" ( param_type ( "," param_type )* )? ")" ( "->" type )?
-
 block           ::= "{" stmt* "}"
 
-stmt            ::= var_decl
+stmt            ::= type_decl
+                  | var_decl
                   | func_decl
                   | block
                   | "if" expr block ( "else" block )?

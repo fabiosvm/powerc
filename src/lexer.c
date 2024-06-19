@@ -274,6 +274,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_RUNE_KW:   name = "RuneKw";    break;
   case TOKEN_KIND_STRING_KW: name = "StringKw";  break;
   case TOKEN_KIND_TRUE_KW:   name = "TrueKw";    break;
+  case TOKEN_KIND_TYPE_KW:   name = "TypeKw";    break;
   case TOKEN_KIND_UINT_KW:   name = "UIntKw";    break;
   case TOKEN_KIND_VAR_KW:    name = "VarKw";     break;
   case TOKEN_KIND_IDENT:     name = "Ident";     break;
@@ -336,6 +337,7 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "Rune", TOKEN_KIND_RUNE_KW)) return;
   if (match_keyword(lex, "String", TOKEN_KIND_STRING_KW)) return;
   if (match_keyword(lex, "true", TOKEN_KIND_TRUE_KW)) return;
+  if (match_keyword(lex, "type", TOKEN_KIND_TYPE_KW)) return;
   if (match_keyword(lex, "UInt", TOKEN_KIND_UINT_KW)) return;
   if (match_keyword(lex, "var", TOKEN_KIND_VAR_KW)) return;
   if (match_ident(lex)) return;
