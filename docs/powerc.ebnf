@@ -26,6 +26,9 @@ stmt            ::= type_decl
                   | func_decl
                   | block
                   | "if" expr block ( "else" block )?
+                  | "loop" block
+                  | "break" ";"
+                  | "continue" ";"
                   | "return" expr? ";"
                   | expr ";"
 

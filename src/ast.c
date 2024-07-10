@@ -38,6 +38,7 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_BLOCK:
   case AST_NODE_KIND_ASSIGN:
   case AST_NODE_KIND_IF:
+  case AST_NODE_KIND_LOOP:
   case AST_NODE_KIND_RETURN:
   case AST_NODE_KIND_OR:
   case AST_NODE_KIND_AND:
@@ -72,6 +73,8 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_FLOAT_TYPE:
   case AST_NODE_KIND_RUNE_TYPE:
   case AST_NODE_KIND_STRING_TYPE:
+  case AST_NODE_KIND_BREAK:
+  case AST_NODE_KIND_CONTINUE:
   case AST_NODE_KIND_FALSE:
   case AST_NODE_KIND_TRUE:
     printf("%s\n", name);
@@ -113,6 +116,9 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_BLOCK:       name = "Block";      break;
   case AST_NODE_KIND_ASSIGN:      name = "Assign";     break;
   case AST_NODE_KIND_IF:          name = "If";         break;
+  case AST_NODE_KIND_LOOP:        name = "Loop";       break;
+  case AST_NODE_KIND_BREAK:       name = "Break";      break;
+  case AST_NODE_KIND_CONTINUE:    name = "Continue";   break;
   case AST_NODE_KIND_RETURN:      name = "Return";     break;
   case AST_NODE_KIND_OR:          name = "Or";         break;
   case AST_NODE_KIND_AND:         name = "And";        break;

@@ -42,6 +42,9 @@ static inline AstNode *parse_func_type(Parser *parser);
 static inline AstNode *parse_block(Parser *parser);
 static inline AstNode *parse_stmt(Parser *parser);
 static inline AstNode *parse_if_stmt(Parser *parser);
+static inline AstNode *parse_loop_stmt(Parser *parser);
+static inline AstNode *parse_break_stmt(Parser *parser);
+static inline AstNode *parse_continue_stmt(Parser *parser);
 static inline AstNode *parse_return_stmt(Parser *parser);
 static inline AstNode *parse_expr(Parser *parser);
 static inline AstNode *parse_or_expr(Parser *parser);
@@ -325,6 +328,12 @@ static inline AstNode *parse_stmt(Parser *parser)
     return parse_block(parser);
   if (match(parser, TOKEN_KIND_IF_KW))
     return parse_if_stmt(parser);
+  if (match(parser, TOKEN_KIND_LOOP_KW))
+    return parse_loop_stmt(parser);
+  if (match(parser, TOKEN_KIND_BREAK_KW))
+    return parse_break_stmt(parser);
+  if (match(parser, TOKEN_KIND_CONTINUE_KW))
+    return parse_continue_stmt(parser);
   if (match(parser, TOKEN_KIND_RETURN_KW))
     return parse_return_stmt(parser);
   AstNode *expr = parse_expr(parser);
@@ -348,6 +357,31 @@ static inline AstNode *parse_if_stmt(Parser *parser)
   }
   ast_nonleaf_node_append_child(ifStmt, elseBlock);
   return (AstNode *) ifStmt;
+}
+
+static inline AstNode *parse_loop_stmt(Parser *parser)
+{
+  next(parser);
+  AstNode *block = parse_block(parser);
+  AstNonLeafNode *loop = ast_nonleaf_node_new(AST_NODE_KIND_LOOP);
+  ast_nonleaf_node_append_child(loop, block);
+  return (AstNode *) loop;
+}
+
+static inline AstNode *parse_break_stmt(Parser *parser)
+{
+  Token token = current(parser);
+  next(parser);
+  consume(parser, TOKEN_KIND_SEMICOLON);
+  return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_BREAK, token);
+}
+
+static inline AstNode *parse_continue_stmt(Parser *parser)
+{
+  Token token = current(parser);
+  next(parser);
+  consume(parser, TOKEN_KIND_SEMICOLON);
+  return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_CONTINUE, token);
 }
 
 static inline AstNode *parse_return_stmt(Parser *parser)
