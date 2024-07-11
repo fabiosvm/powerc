@@ -5,7 +5,7 @@ fn main() {
   var a: Int = 1;
   {
     var a: Int = 2;
-    print(a); // 2
+    println(a); // 2
   }
-  print(a); // 1
+  println(a); // 1
 }

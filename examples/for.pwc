@@ -1,0 +1,9 @@
+
+// for.pwc
+
+fn main() {
+  var a: Range<Int> = 0..5;
+  for i in a {
+    print(i); // 01234
+  }
+}

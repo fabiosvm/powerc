@@ -1,0 +1,12 @@
+
+// if-else.pwc
+
+fn main() {
+  var a: Bool = true;
+  if a {
+    a = false;
+  } else {
+    a = true;
+  }
+  println(a); // false
+}

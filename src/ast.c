@@ -35,10 +35,14 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_INOUT_PARAM:
   case AST_NODE_KIND_REF:
   case AST_NODE_KIND_FUNC_TYPE:
+  case AST_NODE_KIND_TYPE:
   case AST_NODE_KIND_BLOCK:
   case AST_NODE_KIND_ASSIGN:
   case AST_NODE_KIND_IF:
   case AST_NODE_KIND_LOOP:
+  case AST_NODE_KIND_WHILE:
+  case AST_NODE_KIND_DO_WHILE:
+  case AST_NODE_KIND_FOR:
   case AST_NODE_KIND_RETURN:
   case AST_NODE_KIND_OR:
   case AST_NODE_KIND_AND:
@@ -48,6 +52,7 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_LE:
   case AST_NODE_KIND_GT:
   case AST_NODE_KIND_GE:
+  case AST_NODE_KIND_RANGE:
   case AST_NODE_KIND_ADD:
   case AST_NODE_KIND_SUB:
   case AST_NODE_KIND_MUL:
@@ -113,10 +118,14 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_RUNE_TYPE:   name = "RuneType";   break;
   case AST_NODE_KIND_STRING_TYPE: name = "StringType"; break;
   case AST_NODE_KIND_FUNC_TYPE:   name = "FuncType";   break;
+  case AST_NODE_KIND_TYPE:        name = "Type";       break;
   case AST_NODE_KIND_BLOCK:       name = "Block";      break;
   case AST_NODE_KIND_ASSIGN:      name = "Assign";     break;
   case AST_NODE_KIND_IF:          name = "If";         break;
   case AST_NODE_KIND_LOOP:        name = "Loop";       break;
+  case AST_NODE_KIND_WHILE:       name = "While";      break;
+  case AST_NODE_KIND_DO_WHILE:    name = "DoWhile";    break;
+  case AST_NODE_KIND_FOR:         name = "For";        break;
   case AST_NODE_KIND_BREAK:       name = "Break";      break;
   case AST_NODE_KIND_CONTINUE:    name = "Continue";   break;
   case AST_NODE_KIND_RETURN:      name = "Return";     break;
@@ -128,6 +137,7 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_LE:          name = "Le";         break;
   case AST_NODE_KIND_GT:          name = "Gt";         break;
   case AST_NODE_KIND_GE:          name = "Ge";         break;
+  case AST_NODE_KIND_RANGE:       name = "Range";      break;
   case AST_NODE_KIND_ADD:         name = "Add";        break;
   case AST_NODE_KIND_SUB:         name = "Sub";        break;
   case AST_NODE_KIND_MUL:         name = "Mul";        break;

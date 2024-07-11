@@ -1,0 +1,10 @@
+
+// while.pwc
+
+fn main() {
+  var a: Int = 0;
+  while a < 5 {
+    a = a + 1;
+  }
+  println(a); // 5
+}

@@ -2,11 +2,9 @@
 // if.pwc
 
 fn main() {
-  var a: Bool = true;
-  if a {
-    a = false;
-  } else {
-    a = true;
+  var a: Int = 0;
+  if true {
+    a = 1;
   }
-  println(a); // false
+  println(a); // 1
 }

@@ -7,7 +7,9 @@ type_decl       ::= "type" IDENT "=" type ";"
 
 type            ::= "Bool" | "Byte" | "Int" | "UInt" | "Float" | "Rune" | "String"
                   | "fn" "(" ( param_type ( "," param_type )* )? ")" ( "->" type )?
-                  | IDENT
+                  | IDENT ( "<" type ( "," type )* ">" )?
+
+param_type      ::= "inout"? type
 
 var_decl        ::= "var" IDENT ":" type ( "=" expr )? ";"
 
@@ -17,8 +19,6 @@ func_body       ::= "(" ( param ( "," param )* )? ")" ( "->" type )? block
 
 param           ::= IDENT ":" param_type
 
-param_type      ::= "inout"? type
-
 block           ::= "{" stmt* "}"
 
 stmt            ::= type_decl
@@ -27,6 +27,9 @@ stmt            ::= type_decl
                   | block
                   | "if" expr block ( "else" block )?
                   | "loop" block
+                  | "while" expr block
+                  | "do" block "while" expr ";"
+                  | "for" IDENT "in" expr block
                   | "break" ";"
                   | "continue" ";"
                   | "return" expr? ";"
@@ -40,7 +43,9 @@ and_expr        ::= eq_expr ( "&&" eq_expr )*
 
 eq_expr         ::= comp_expr ( ( "==" | "!=" ) comp_expr )*
 
-comp_expr       ::= add_expr ( ( "<" | "<=" | ">" | ">=" ) add_expr )*
+comp_expr       ::= range_expr ( ( "<" | "<=" | ">" | ">=" ) range_expr )*
+
+range_expr      ::= add_expr ( ".." add_expr )?
 
 add_expr        ::= mul_expr ( ( "+" | "-" ) mul_expr )*
 
