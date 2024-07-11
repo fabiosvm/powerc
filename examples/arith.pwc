@@ -10,7 +10,7 @@ fn add_one(x: Int) -> Int {
 }
 
 fn main() -> Int {
-  var a: Int = 3;
+  let a: Int = 3;
   var b: Int;
   b = add_one(square(a));
   println(b); // 10

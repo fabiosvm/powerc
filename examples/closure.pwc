@@ -2,7 +2,7 @@
 // closure.pwc
 
 fn main() {
-  var a: String = "Hello";
+  let a: String = "Hello";
   var f: fn ();
   f = fn () {
     println(a);

@@ -2,9 +2,9 @@
 // block.pwc
 
 fn main() {
-  var a: Int = 1;
+  let a = 1;
   {
-    var a: Int = 2;
+    let a = 2;
     println(a); // 2
   }
   println(a); // 1

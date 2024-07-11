@@ -2,6 +2,7 @@
 // range.pwc
 
 fn main() {
-  var a: Range<Int> = 0..5;
+  var a: Range<Int>;
+  a = 0..5;
   print(a); // 0..5
 }

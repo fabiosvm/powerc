@@ -2,8 +2,8 @@
 // loop.pwc
 
 fn main() {
-  var min: Int = 5;
-  var max: Int = 10;
+  let min = 5;
+  let max = 10;
   var i: Int = 0;
   loop {
     i = i + 1;

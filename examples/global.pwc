@@ -1,7 +1,7 @@
 
 // global.pwc
 
-var PI: Float = 3.14;
+let PI = 3.14;
 
 fn main() {
   println(PI);

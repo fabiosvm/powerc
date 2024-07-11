@@ -12,6 +12,7 @@ type            ::= "Bool" | "Byte" | "Int" | "UInt" | "Float" | "Rune" | "Strin
 param_type      ::= "inout"? type
 
 var_decl        ::= "var" IDENT ":" type ( "=" expr )? ";"
+                  | "let" IDENT ( ":" type )? "=" expr ";"
 
 func_decl       ::= "fn" IDENT func_body
 
@@ -59,4 +60,5 @@ prim_expr       ::= "false" | "true" | INT | FLOAT | RUNE | STRING
                   | "[" ( expr ( "," expr )* )? "]"
                   | "fn" func_body
                   | "&"? IDENT ( "[" expr "]" )*
+                  | "if" expr "{" expr "}" "else" "{" expr "}"
                   | "(" expr ")"
