@@ -7,6 +7,9 @@ fn mutate(x: inout Int) {
 
 fn main() {
   var a: Int = 1;
+  var b: Array<Int> = [1, 2, 3];
   mutate(&a);
   println(a); // 2
+  mutate(&b[0]);
+  println(b); // [2, 2, 3]
 }

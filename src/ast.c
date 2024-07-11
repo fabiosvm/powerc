@@ -61,6 +61,8 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_NOT:
   case AST_NODE_KIND_NEG:
   case AST_NODE_KIND_CALL:
+  case AST_NODE_KIND_ARRAY:
+  case AST_NODE_KIND_GET_ELEMENT:
     {
       AstNonLeafNode *nonleaf = (AstNonLeafNode *) node;
       printf("%s:\n", name);
@@ -152,6 +154,8 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_FLOAT:       name = "Float";      break;
   case AST_NODE_KIND_RUNE:        name = "Rune";       break;
   case AST_NODE_KIND_STRING:      name = "String";     break;
+  case AST_NODE_KIND_ARRAY:       name = "Array";      break;
+  case AST_NODE_KIND_GET_ELEMENT: name = "GetElement"; break;
   case AST_NODE_KIND_IDENT:       name = "Ident";      break;
   }
   assert(name);

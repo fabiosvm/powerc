@@ -56,6 +56,7 @@ unary_expr      ::= ( "!" | "-" ) unary_expr | call_expr
 call_expr       ::= prim_expr ( "(" ( expr ( "," expr )* )? ")" )*
 
 prim_expr       ::= "false" | "true" | INT | FLOAT | RUNE | STRING
+                  | "[" ( expr ( "," expr )* )? "]"
                   | "fn" func_body
-                  | "&"? IDENT
+                  | "&"? IDENT ( "[" expr "]" )*
                   | "(" expr ")"

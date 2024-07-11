@@ -1,0 +1,8 @@
+
+// array.pwc
+
+fn main() {
+  var a: Array<Int>;
+  a = [1, 2, 3];
+  println(a[0]); // 1
+}

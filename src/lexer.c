@@ -238,6 +238,8 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_SEMICOLON:   name = "Semicolon";  break;
   case TOKEN_KIND_LPAREN:      name = "LParen";     break;
   case TOKEN_KIND_RPAREN:      name = "RParen";     break;
+  case TOKEN_KIND_LBRACKET:    name = "LBracket";   break;
+  case TOKEN_KIND_RBRACKET:    name = "RBracket";   break;
   case TOKEN_KIND_LBRACE:      name = "LBrace";     break;
   case TOKEN_KIND_RBRACE:      name = "RBrace";     break;
   case TOKEN_KIND_PIPEPIPE:    name = "PipePipe";   break;
@@ -310,6 +312,8 @@ void lexer_next(Lexer *lex)
   if (match_char(lex, ':', TOKEN_KIND_COLON)) return;
   if (match_char(lex, '(', TOKEN_KIND_LPAREN)) return;
   if (match_char(lex, ')', TOKEN_KIND_RPAREN)) return;
+  if (match_char(lex, '[', TOKEN_KIND_LBRACKET)) return;
+  if (match_char(lex, ']', TOKEN_KIND_RBRACKET)) return;
   if (match_char(lex, '{', TOKEN_KIND_LBRACE)) return;
   if (match_char(lex, '}', TOKEN_KIND_RBRACE)) return;
   if (match_chars(lex, "||", TOKEN_KIND_PIPEPIPE)) return;
