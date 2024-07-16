@@ -4,7 +4,7 @@
 fn main() {
   var a: Int = 0;
   do {
-    a = a + 1;
+    a += 1;
   } while a < 5;
   println(a); // 5
 }

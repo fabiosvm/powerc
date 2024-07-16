@@ -245,6 +245,11 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_PIPEPIPE:    name = "PipePipe";   break;
   case TOKEN_KIND_AMPAMP:      name = "AmpAmp";     break;
   case TOKEN_KIND_AMP:         name = "Amp";        break;
+  case TOKEN_KIND_PLUSEQ:      name = "PlusEq";     break;
+  case TOKEN_KIND_MINUSEQ:     name = "MinusEq";    break;
+  case TOKEN_KIND_STAREQ:      name = "StarEq";     break;
+  case TOKEN_KIND_SLASHEQ:     name = "SlashEq";    break;
+  case TOKEN_KIND_PERCENTEQ:   name = "PercentEq";  break;
   case TOKEN_KIND_EQEQ:        name = "EqEq";       break;
   case TOKEN_KIND_EQ:          name = "Eq";         break;
   case TOKEN_KIND_BANGEQ:      name = "BangEq";     break;
@@ -320,6 +325,11 @@ void lexer_next(Lexer *lex)
   if (match_chars(lex, "||", TOKEN_KIND_PIPEPIPE)) return;
   if (match_chars(lex, "&&", TOKEN_KIND_AMPAMP)) return;
   if (match_char(lex, '&', TOKEN_KIND_AMP)) return;
+  if (match_chars(lex, "+=", TOKEN_KIND_PLUSEQ)) return;
+  if (match_chars(lex, "-=", TOKEN_KIND_MINUSEQ)) return;
+  if (match_chars(lex, "*=", TOKEN_KIND_STAREQ)) return;
+  if (match_chars(lex, "/=", TOKEN_KIND_SLASHEQ)) return;
+  if (match_chars(lex, "%=", TOKEN_KIND_PERCENTEQ)) return;
   if (match_chars(lex, "==", TOKEN_KIND_EQEQ)) return;
   if (match_char(lex, '=', TOKEN_KIND_EQ)) return;
   if (match_chars(lex, "!=", TOKEN_KIND_BANGEQ)) return;

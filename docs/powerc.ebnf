@@ -36,7 +36,9 @@ stmt            ::= type_decl
                   | "return" expr? ";"
                   | expr ";"
 
-expr            ::= or_expr ( "=" expr )?
+expr            ::= or_expr ( assign_op expr )?
+
+assign_op       ::= "=" | "+=" | "-=" | "*=" | "/=" | "%="
 
 or_expr         ::= and_expr ( "||" and_expr )*
 

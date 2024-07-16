@@ -6,7 +6,7 @@ fn main() {
   let max = 10;
   var i: Int = 0;
   loop {
-    i = i + 1;
+    i += 1;
     if i < min {
       continue;
     }

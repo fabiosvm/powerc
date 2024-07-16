@@ -506,16 +506,50 @@ static inline AstNode *parse_return_stmt(Parser *parser)
 static inline AstNode *parse_expr(Parser *parser)
 {
   AstNode *lhs = parse_or_expr(parser);
+  AstNodeKind kind = AST_NODE_KIND_ASSIGN;
   if (match(parser, TOKEN_KIND_EQ))
   {
     next(parser);
-    AstNode *rhs = parse_expr(parser);
-    AstNonLeafNode *assign = ast_nonleaf_node_new(AST_NODE_KIND_ASSIGN);
-    ast_nonleaf_node_append_child(assign, lhs);
-    ast_nonleaf_node_append_child(assign, rhs);
-    lhs = (AstNode *) assign;
+    goto end;
+  }
+  if (match(parser, TOKEN_KIND_PLUSEQ))
+  {
+    next(parser);
+    kind = AST_NODE_KIND_ADD_ASSIGN;
+    goto end;
+  }
+  if (match(parser, TOKEN_KIND_MINUSEQ))
+  {
+    next(parser);
+    kind = AST_NODE_KIND_SUB_ASSIGN;
+    goto end;
+  }
+  if (match(parser, TOKEN_KIND_STAREQ))
+  {
+    next(parser);
+    kind = AST_NODE_KIND_MUL_ASSIGN;
+    goto end;
+  }
+  if (match(parser, TOKEN_KIND_SLASHEQ))
+  {
+    next(parser);
+    kind = AST_NODE_KIND_DIV_ASSIGN;
+    goto end;
+  }
+  if (match(parser, TOKEN_KIND_PERCENTEQ))
+  {
+    next(parser);
+    kind = AST_NODE_KIND_MOD_ASSIGN;
+    goto end;
   }
   return lhs;
+  AstNode *rhs;
+end:
+  rhs = parse_expr(parser);
+  AstNonLeafNode *assign = ast_nonleaf_node_new(kind);
+  ast_nonleaf_node_append_child(assign, lhs);
+  ast_nonleaf_node_append_child(assign, rhs);
+  return (AstNode *) assign;
 }
 
 static inline AstNode *parse_or_expr(Parser *parser)
