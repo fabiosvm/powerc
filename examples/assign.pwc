@@ -2,11 +2,17 @@
 // assign.pwc
 
 fn main() {
-  var a: Float = 0;
-  a += 1;
+  var a: Int = 1;
+  a = 2;
+  a |= 1;
+  a ^= 2;
+  a &= 3;
+  a <<= 1;
+  a >>= 1;
+  a += 3;
   a -= 2;
   a *= 3;
-  a /= 4;
-  a %= 5;
-  println(a);
+  a /= 2;
+  a %= 2;
+  println(a); // 1 
 }

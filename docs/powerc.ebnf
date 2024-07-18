@@ -38,7 +38,8 @@ stmt            ::= type_decl
 
 expr            ::= or_expr ( assign_op expr )?
 
-assign_op       ::= "=" | "+=" | "-=" | "*=" | "/=" | "%="
+assign_op       ::= "=" | "|=" | "^=" | "&=" | "<<=" | ">>=" 
+                  | "+=" | "-=" | "*=" | "/=" | "%="
 
 or_expr         ::= and_expr ( "||" and_expr )*
 
@@ -46,7 +47,15 @@ and_expr        ::= eq_expr ( "&&" eq_expr )*
 
 eq_expr         ::= comp_expr ( ( "==" | "!=" ) comp_expr )*
 
-comp_expr       ::= range_expr ( ( "<" | "<=" | ">" | ">=" ) range_expr )*
+comp_expr       ::= bor_expr ( ( "<" | "<=" | ">" | ">=" ) bor_expr )*
+
+bor_expr        ::= bxor_expr ( "|" bxor_expr )*
+
+bxor_expr       ::= band_expr ( "^" band_expr )*
+
+band_expr       ::= shift_expr ( "&" shift_expr )*
+
+shift_expr      ::= range_expr ( ( "<<" | ">>" ) range_expr )*
 
 range_expr      ::= add_expr ( ".." add_expr )?
 
@@ -54,7 +63,7 @@ add_expr        ::= mul_expr ( ( "+" | "-" ) mul_expr )*
 
 mul_expr        ::= unary_expr ( ( "*" | "/" | "%" ) unary_expr )*
 
-unary_expr      ::= ( "!" | "-" ) unary_expr | call_expr
+unary_expr      ::= ( "!" | "-" | "~" ) unary_expr | call_expr
 
 call_expr       ::= prim_expr ( "(" ( expr ( "," expr )* )? ")" )*
 

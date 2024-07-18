@@ -1,0 +1,13 @@
+
+// bitwise.pwc
+
+fn main() {
+  let a = 0;
+  let b = 1;
+  println(a | b); // 1
+  println(a ^ b); // 1
+  println(a & b); // 0
+  println(~b); // -2
+  println(b << 1); // 2
+  println(b >> 1); // 0
+}
