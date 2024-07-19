@@ -264,6 +264,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_GTGT:        name = "GtGt";       break;
   case TOKEN_KIND_GT:          name = "Gt";         break;
   case TOKEN_KIND_DOTDOT:      name = "DotDot";     break;
+  case TOKEN_KIND_DOT:         name = "Dot";        break;
   case TOKEN_KIND_PLUSEQ:      name = "PlusEq";     break;
   case TOKEN_KIND_PLUS:        name = "Plus";       break;
   case TOKEN_KIND_ARROW:       name = "Arrow";      break;
@@ -298,6 +299,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_RETURN_KW:   name = "ReturnKw";   break;
   case TOKEN_KIND_RUNE_KW:     name = "RuneKw";     break;
   case TOKEN_KIND_STRING_KW:   name = "StringKw";   break;
+  case TOKEN_KIND_STRUCT_KW:   name = "StructKw";   break;
   case TOKEN_KIND_TRUE_KW:     name = "TrueKw";     break;
   case TOKEN_KIND_TYPE_KW:     name = "TypeKw";     break;
   case TOKEN_KIND_UINT_KW:     name = "UIntKw";     break;
@@ -354,6 +356,7 @@ void lexer_next(Lexer *lex)
   if (match_chars(lex, ">>", TOKEN_KIND_GTGT)) return;
   if (match_char(lex, '>', TOKEN_KIND_GT)) return;
   if (match_chars(lex, "..", TOKEN_KIND_DOTDOT)) return;
+  if (match_char(lex, '.', TOKEN_KIND_DOT)) return;
   if (match_chars(lex, "+=", TOKEN_KIND_PLUSEQ)) return;
   if (match_char(lex, '+', TOKEN_KIND_PLUS)) return;
   if (match_chars(lex, "->", TOKEN_KIND_ARROW)) return;
@@ -387,6 +390,7 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "return", TOKEN_KIND_RETURN_KW)) return;
   if (match_keyword(lex, "Rune", TOKEN_KIND_RUNE_KW)) return;
   if (match_keyword(lex, "String", TOKEN_KIND_STRING_KW)) return;
+  if (match_keyword(lex, "struct", TOKEN_KIND_STRUCT_KW)) return;
   if (match_keyword(lex, "true", TOKEN_KIND_TRUE_KW)) return;
   if (match_keyword(lex, "type", TOKEN_KIND_TYPE_KW)) return;
   if (match_keyword(lex, "UInt", TOKEN_KIND_UINT_KW)) return;

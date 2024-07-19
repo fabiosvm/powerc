@@ -34,6 +34,7 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_FUNC_DECL:
   case AST_NODE_KIND_PARAMS:
   case AST_NODE_KIND_INOUT_PARAM:
+  case AST_NODE_KIND_STRUCT_DECL:
   case AST_NODE_KIND_REF:
   case AST_NODE_KIND_FUNC_TYPE:
   case AST_NODE_KIND_TYPE:
@@ -79,7 +80,8 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_BNOT:
   case AST_NODE_KIND_CALL:
   case AST_NODE_KIND_ARRAY:
-  case AST_NODE_KIND_GET_ELEMENT:
+  case AST_NODE_KIND_ELEMENT:
+  case AST_NODE_KIND_FIELD:
     {
       AstNonLeafNode *nonleaf = (AstNonLeafNode *) node;
       printf("%s:\n", name);
@@ -129,6 +131,7 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_FUNC_DECL:   name = "FuncDecl";     break;
   case AST_NODE_KIND_PARAMS:      name = "Params";       break;
   case AST_NODE_KIND_INOUT_PARAM: name = "InoutParam";   break;
+  case AST_NODE_KIND_STRUCT_DECL: name = "StructDecl";   break;
   case AST_NODE_KIND_REF:         name = "Ref";          break;
   case AST_NODE_KIND_BOOL_TYPE:   name = "BoolType";     break;
   case AST_NODE_KIND_BYTE_TYPE:   name = "ByteType";     break;
@@ -144,8 +147,8 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_BOR_ASSIGN:  name = "BitOrAssign";  break;
   case AST_NODE_KIND_BXOR_ASSIGN: name = "BitXorAssign"; break;
   case AST_NODE_KIND_BAND_ASSIGN: name = "BitAndAssign"; break;
-  case AST_NODE_KIND_SHL_ASSIGN:  name = "ShLAssign";    break;
-  case AST_NODE_KIND_SHR_ASSIGN:  name = "ShRAssign";    break;
+  case AST_NODE_KIND_SHL_ASSIGN:  name = "ShlAssign";    break;
+  case AST_NODE_KIND_SHR_ASSIGN:  name = "ShrAssign";    break;
   case AST_NODE_KIND_ADD_ASSIGN:  name = "AddAssign";    break;
   case AST_NODE_KIND_SUB_ASSIGN:  name = "SubAssign";    break;
   case AST_NODE_KIND_MUL_ASSIGN:  name = "MulAssign";    break;
@@ -170,8 +173,8 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_BOR:         name = "BitOr";        break;
   case AST_NODE_KIND_BXOR:        name = "BitXor";       break;
   case AST_NODE_KIND_BAND:        name = "BitAnd";       break;
-  case AST_NODE_KIND_SHL:         name = "ShL";          break;
-  case AST_NODE_KIND_SHR:         name = "ShR";          break;
+  case AST_NODE_KIND_SHL:         name = "Shl";          break;
+  case AST_NODE_KIND_SHR:         name = "Shr";          break;
   case AST_NODE_KIND_RANGE:       name = "Range";        break;
   case AST_NODE_KIND_ADD:         name = "Add";          break;
   case AST_NODE_KIND_SUB:         name = "Sub";          break;
@@ -189,7 +192,8 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_RUNE:        name = "Rune";         break;
   case AST_NODE_KIND_STRING:      name = "String";       break;
   case AST_NODE_KIND_ARRAY:       name = "Array";        break;
-  case AST_NODE_KIND_GET_ELEMENT: name = "GetElement";   break;
+  case AST_NODE_KIND_ELEMENT:     name = "Element";      break;
+  case AST_NODE_KIND_FIELD:       name = "Field";        break;
   case AST_NODE_KIND_IDENT:       name = "Ident";        break;
   }
   assert(name);

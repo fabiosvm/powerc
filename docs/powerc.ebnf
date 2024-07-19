@@ -1,7 +1,7 @@
 
 module          ::= decl* EOF
 
-decl            ::= type_decl | var_decl | func_decl
+decl            ::= type_decl | var_decl | func_decl | struct_decl
 
 type_decl       ::= "type" IDENT "=" type ";"
 
@@ -22,9 +22,14 @@ param           ::= IDENT ":" param_type
 
 block           ::= "{" stmt* "}"
 
+struct_decl     ::= "struct" IDENT "{" ( field ( "," field )* )? "}"
+
+field           ::= IDENT ":" type
+
 stmt            ::= type_decl
                   | var_decl
                   | func_decl
+                  | struct_decl
                   | block
                   | "if" expr block ( "else" block )?
                   | "loop" block
@@ -73,6 +78,6 @@ prim_expr       ::= "false" | "true" | INT | FLOAT | RUNE | STRING
                   | "if" expr "{" expr "}" "else" "{" expr "}"
                   | "(" expr ")"
 
-subscr          ::= "[" expr "]"
+subscr          ::= "[" expr "]" | "." IDENT
 
 call            ::= "(" ( expr ( "," expr )* )? ")"

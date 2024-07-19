@@ -1,0 +1,94 @@
+
+// geometry.pwc
+
+// Point
+
+struct Point {
+  x: Float,
+  y: Float
+}
+
+fn init(self: Point, x: Float, y: Float) {
+  self.x = x;
+  self.y = y;
+}
+
+fn distance(self: Point, other: Point) -> Float {
+  let dx = abs(self.x - other.x);
+  let dy = abs(self.y - other.y);
+  return sqrt(pow(dx, 2) + pow(dy, 2));
+}
+
+// Circle
+
+struct Circle {
+  center: Point,
+  radius: Float
+}
+
+fn init(self: Circle, radius: Float) {
+  init(self, Point(0, 0), radius);
+}
+
+fn init(self: Circle, center: Point, radius: Float) {
+  self.center = center;
+  self.radius = radius;
+}
+
+fn perimeter(self: Circle) -> Float {
+  return 2 * PI * self.radius;
+}
+
+fn area(self: Circle) -> Float {
+  return PI * pow(self.radius, 2);
+}
+
+// Rect
+
+struct Rect {
+  center: Point,
+  width: Float,
+  height: Float
+}
+
+fn init(self: Rect, width: Float, height: Float) {
+  init(self, Point(0, 0), width, height);
+}
+
+fn init(self: Rect, center: Point, width: Float, height: Float) {
+  self.center = center;
+  self.width = width;
+  self.height = height;
+}
+
+fn perimeter(self: Rect) -> Float {
+  return 2 * (self.width + self.height);
+}
+
+fn area(self: Rect) -> Float {
+  return self.width * self.height;
+}
+
+fn main() {
+  // Points
+  let p1 = Point(-3, -4);
+  let p2 = Point(3, 4);
+  let d = p1.distance(p2);
+  println(d); // 10
+
+  // Circles
+  let c1 = Circle(3);
+  let c2 = Circle(Point(1, 2), 3);
+  let perim = c1.perimeter();
+  println(perim); // 18.849556
+  let area = c2.area();
+  println(area); // 28.274334
+
+  // Rects
+  let r1 = Rect(3, 4);
+  let r2 = Rect(Point(1, 2), 3, 4);
+  let perim = r1.perimeter();
+  println(perim); // 14
+  let area = r2.area();
+  println(area); // 12
+}
