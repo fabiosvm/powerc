@@ -1,0 +1,13 @@
+
+// call.pwc
+
+fn main() {
+  let f = fn () -> Array<fn ()> {
+    return [
+      fn () {
+        println("Hello");
+      }
+    ];
+  };
+  f()[0](); // Hello
+}
