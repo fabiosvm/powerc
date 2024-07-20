@@ -31,9 +31,9 @@ The main features of the language are:
 - Mutable Value Semantics
 - UTF-8 Strings
 - Closures
-- Structs and Enums
+- Structs
 - Methods
-- Traits
+- Interfaces
 - Generics (Monomorphization)
 - Automatic Reference Counting
 

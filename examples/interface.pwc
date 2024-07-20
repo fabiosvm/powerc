@@ -1,0 +1,36 @@
+
+// interface.pwc
+
+interface I {
+  fn f(self: Self);
+}
+
+interface J {
+  fn g(self: Self);
+}
+
+interface K: I + J {
+  fn h(self: Self);
+}
+
+struct S {}
+
+fn f(self: S) {
+  println("f() called");
+}
+
+fn g(self: S) {
+  println("g() called");
+}
+
+fn h(self: S) {
+  println("h() called");
+}
+
+fn main() {
+  var k: K;
+  k = S();
+  k.f(); // f() called
+  k.g(); // g() called
+  k.h(); // h() called
+}

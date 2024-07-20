@@ -69,6 +69,18 @@ fn area(self: Rect) -> Float {
   return self.width * self.height;
 }
 
+// Shape
+
+interface Area {
+  fn area(self: Self) -> Float;
+}
+
+interface Perimeter {
+  fn perimeter(self: Self) -> Float;
+}
+
+type Shape = Area + Perimeter;
+
 fn main() {
   // Points
   let p1 = Point(-3, -4);
@@ -91,4 +103,13 @@ fn main() {
   println(perim); // 14
   let area = r2.area();
   println(area); // 12
+
+  // Shape
+  var shape: Shape;
+  shape = c1;
+  println(shape.perimeter()); // 18.849556
+  println(shape.area()); // 28.274334
+  shape = r1;
+  println(shape.perimeter()); // 14
+  println(shape.area()); // 12
 }
