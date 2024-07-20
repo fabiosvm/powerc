@@ -242,6 +242,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_RBRACKET:    name = "RBracket";   break;
   case TOKEN_KIND_LBRACE:      name = "LBrace";     break;
   case TOKEN_KIND_RBRACE:      name = "RBrace";     break;
+  case TOKEN_KIND_QMARK:       name = "QMark";      break;
   case TOKEN_KIND_PIPEEQ:      name = "PipeEq";     break;
   case TOKEN_KIND_PIPEPIPE:    name = "PipePipe";   break;
   case TOKEN_KIND_PIPE:        name = "Pipe";       break;
@@ -296,6 +297,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_INT_KW:      name = "IntKw";      break;
   case TOKEN_KIND_LET_KW:      name = "LetKw";      break;
   case TOKEN_KIND_LOOP_KW:     name = "LoopKw";     break;
+  case TOKEN_KIND_NULL_KW:     name = "NullKw";     break;
   case TOKEN_KIND_RETURN_KW:   name = "ReturnKw";   break;
   case TOKEN_KIND_RUNE_KW:     name = "RuneKw";     break;
   case TOKEN_KIND_STRING_KW:   name = "StringKw";   break;
@@ -334,6 +336,7 @@ void lexer_next(Lexer *lex)
   if (match_char(lex, ']', TOKEN_KIND_RBRACKET)) return;
   if (match_char(lex, '{', TOKEN_KIND_LBRACE)) return;
   if (match_char(lex, '}', TOKEN_KIND_RBRACE)) return;
+  if (match_char(lex, '?', TOKEN_KIND_QMARK)) return;
   if (match_chars(lex, "|=", TOKEN_KIND_PIPEEQ)) return;
   if (match_chars(lex, "||", TOKEN_KIND_PIPEPIPE)) return;
   if (match_char(lex, '|', TOKEN_KIND_PIPE)) return;
@@ -387,6 +390,7 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "Int", TOKEN_KIND_INT_KW)) return;
   if (match_keyword(lex, "let", TOKEN_KIND_LET_KW)) return;
   if (match_keyword(lex, "loop", TOKEN_KIND_LOOP_KW)) return;
+  if (match_keyword(lex, "null", TOKEN_KIND_NULL_KW)) return;
   if (match_keyword(lex, "return", TOKEN_KIND_RETURN_KW)) return;
   if (match_keyword(lex, "Rune", TOKEN_KIND_RUNE_KW)) return;
   if (match_keyword(lex, "String", TOKEN_KIND_STRING_KW)) return;

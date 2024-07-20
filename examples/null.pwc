@@ -1,0 +1,10 @@
+
+// null.pwc
+
+fn main() {
+  var a: ?Int;
+  a = null;
+  println(a); // null
+  a = 1;
+  println(a); // 1
+}
