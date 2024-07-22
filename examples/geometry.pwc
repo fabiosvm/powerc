@@ -4,16 +4,16 @@
 // Point
 
 struct Point {
-  x: Float,
-  y: Float
+  x: Double,
+  y: Double
 }
 
-fn init(self: Point, x: Float, y: Float) {
+fn init(self: Point, x: Double, y: Double) {
   self.x = x;
   self.y = y;
 }
 
-fn distance(self: Point, other: Point) -> Float {
+fn distance(self: Point, other: Point) -> Double {
   let dx = abs(self.x - other.x);
   let dy = abs(self.y - other.y);
   return sqrt(pow(dx, 2) + pow(dy, 2));
@@ -23,23 +23,23 @@ fn distance(self: Point, other: Point) -> Float {
 
 struct Circle {
   center: Point,
-  radius: Float
+  radius: Double
 }
 
-fn init(self: Circle, radius: Float) {
+fn init(self: Circle, radius: Double) {
   init(self, new Point(0, 0), radius);
 }
 
-fn init(self: Circle, center: Point, radius: Float) {
+fn init(self: Circle, center: Point, radius: Double) {
   self.center = center;
   self.radius = radius;
 }
 
-fn perimeter(self: Circle) -> Float {
+fn perimeter(self: Circle) -> Double {
   return 2 * PI * self.radius;
 }
 
-fn area(self: Circle) -> Float {
+fn area(self: Circle) -> Double {
   return PI * pow(self.radius, 2);
 }
 
@@ -47,36 +47,36 @@ fn area(self: Circle) -> Float {
 
 struct Rect {
   center: Point,
-  width: Float,
-  height: Float
+  width: Double,
+  height: Double
 }
 
-fn init(self: Rect, width: Float, height: Float) {
+fn init(self: Rect, width: Double, height: Double) {
   init(self, new Point(0, 0), width, height);
 }
 
-fn init(self: Rect, center: Point, width: Float, height: Float) {
+fn init(self: Rect, center: Point, width: Double, height: Double) {
   self.center = center;
   self.width = width;
   self.height = height;
 }
 
-fn perimeter(self: Rect) -> Float {
+fn perimeter(self: Rect) -> Double {
   return 2 * (self.width + self.height);
 }
 
-fn area(self: Rect) -> Float {
+fn area(self: Rect) -> Double {
   return self.width * self.height;
 }
 
 // Shape
 
 interface Area {
-  fn area(self: Self) -> Float;
+  fn area(self: Self) -> Double;
 }
 
 interface Perimeter {
-  fn perimeter(self: Self) -> Float;
+  fn perimeter(self: Self) -> Double;
 }
 
 type Shape = Area + Perimeter;

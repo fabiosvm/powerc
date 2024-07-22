@@ -7,8 +7,7 @@ type_decl       ::= "type" IDENT "=" type ";"
 
 type            ::= prim_type ( "+" prim_type )*
 
-prim_type       ::= "Bool" | "Byte" | "Int" | "UInt" | "Float" | "Rune" | "String"
-                  | "fn" "(" ( param_type ( "," param_type )* )? ")" ( "->" type )?
+prim_type       ::= "fn" "(" ( param_type ( "," param_type )* )? ")" ( "->" type )?
                   | IDENT ( "<" type ( "," type )* ">" )?
                   | "?" type
 

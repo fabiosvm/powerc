@@ -96,13 +96,6 @@ static inline void node_print(AstNode *node, int level)
       }
     }
     break;
-  case AST_NODE_KIND_BOOL_TYPE:
-  case AST_NODE_KIND_BYTE_TYPE:
-  case AST_NODE_KIND_INT_TYPE:
-  case AST_NODE_KIND_UINT_TYPE:
-  case AST_NODE_KIND_FLOAT_TYPE:
-  case AST_NODE_KIND_RUNE_TYPE:
-  case AST_NODE_KIND_STRING_TYPE:
   case AST_NODE_KIND_BREAK:
   case AST_NODE_KIND_CONTINUE:
   case AST_NODE_KIND_NULL:
@@ -140,13 +133,6 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_VAR_DECL:       name = "VarDecl";       break;
   case AST_NODE_KIND_LET_DECL:       name = "LetDecl";       break;
   case AST_NODE_KIND_REF:            name = "Ref";           break;
-  case AST_NODE_KIND_BOOL_TYPE:      name = "BoolType";      break;
-  case AST_NODE_KIND_BYTE_TYPE:      name = "ByteType";      break;
-  case AST_NODE_KIND_INT_TYPE:       name = "IntType";       break;
-  case AST_NODE_KIND_UINT_TYPE:      name = "UIntType";      break;
-  case AST_NODE_KIND_FLOAT_TYPE:     name = "FloatType";     break;
-  case AST_NODE_KIND_RUNE_TYPE:      name = "RuneType";      break;
-  case AST_NODE_KIND_STRING_TYPE:    name = "StringType";    break;
   case AST_NODE_KIND_FUNC_TYPE:      name = "FuncType";      break;
   case AST_NODE_KIND_TYPE:           name = "Type";          break;
   case AST_NODE_KIND_NULLABLE:       name = "Nullable";      break;

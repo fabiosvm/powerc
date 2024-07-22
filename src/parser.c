@@ -37,7 +37,7 @@ static inline AstNode *parse_type(Parser *parser);
 static inline AstNode *parse_prim_type(Parser *parser);
 static inline AstNode *parse_func_type(Parser *parser);
 static inline AstNode *parse_param_type(Parser *parser);
-static inline AstNode *parse_user_defined_type(Parser *parser);
+static inline AstNode *parse_type_def(Parser *parser);
 static inline AstNode *parse_func_decl(Parser *parser, bool isAnon, bool isProto);
 static inline AstNode *parse_param(Parser *parser);
 static inline AstNode *parse_block(Parser *parser);
@@ -155,52 +155,10 @@ static inline AstNode *parse_type(Parser *parser)
 
 static inline AstNode *parse_prim_type(Parser *parser)
 {
-  if (match(parser, TOKEN_KIND_BOOL_KW))
-  {
-    Token token = current(parser);
-    next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_BOOL_TYPE, token);
-  }
-  if (match(parser, TOKEN_KIND_BYTE_KW))
-  {
-    Token token = current(parser);
-    next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_BYTE_TYPE, token);
-  }
-  if (match(parser, TOKEN_KIND_INT_KW))
-  {
-    Token token = current(parser);
-    next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_INT_TYPE, token);
-  }
-  if (match(parser, TOKEN_KIND_UINT_KW))
-  {
-    Token token = current(parser);
-    next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_UINT_TYPE, token);
-  }
-  if (match(parser, TOKEN_KIND_FLOAT_KW))
-  {
-    Token token = current(parser);
-    next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_FLOAT_TYPE, token);
-  }
-  if (match(parser, TOKEN_KIND_RUNE_KW))
-  {
-    Token token = current(parser);
-    next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_RUNE_TYPE, token);
-  }
-  if (match(parser, TOKEN_KIND_STRING_KW))
-  {
-    Token token = current(parser);
-    next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_STRING_TYPE, token);
-  }
   if (match(parser, TOKEN_KIND_FN_KW))
     return parse_func_type(parser);
   if (match(parser, TOKEN_KIND_IDENT))
-    return parse_user_defined_type(parser);
+    return parse_type_def(parser);
   if (match(parser, TOKEN_KIND_QMARK))
   {
     next(parser);
@@ -259,7 +217,7 @@ static inline AstNode *parse_param_type(Parser *parser)
   return parse_type(parser);
 }
 
-static inline AstNode *parse_user_defined_type(Parser *parser)
+static inline AstNode *parse_type_def(Parser *parser)
 {
   Token token = current(parser);
   next(parser);
@@ -267,18 +225,18 @@ static inline AstNode *parse_user_defined_type(Parser *parser)
   if (!match(parser, TOKEN_KIND_LT))
     return (AstNode *) ident;
   next(parser);
-  AstNonLeafNode *udt = ast_nonleaf_node_new(AST_NODE_KIND_TYPE);
-  ast_nonleaf_node_append_child(udt, ident);
+  AstNonLeafNode *typeDef = ast_nonleaf_node_new(AST_NODE_KIND_TYPE);
+  ast_nonleaf_node_append_child(typeDef, ident);
   AstNode *type = parse_type(parser);
-  ast_nonleaf_node_append_child(udt, type);
+  ast_nonleaf_node_append_child(typeDef, type);
   while (match(parser, TOKEN_KIND_COMMA))
   {
     next(parser);
     type = parse_type(parser);
-    ast_nonleaf_node_append_child(udt, type);
+    ast_nonleaf_node_append_child(typeDef, type);
   }
   consume(parser, TOKEN_KIND_GT);
-  return (AstNode *) udt;
+  return (AstNode *) typeDef;
 }
 
 static inline AstNode *parse_func_decl(Parser *parser, bool isAnon, bool isProto)
