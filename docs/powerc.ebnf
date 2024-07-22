@@ -81,11 +81,12 @@ unary_expr      ::= ( "!" | "-" | "~" ) unary_expr | prim_expr
 prim_expr       ::= "null" | "false" | "true" | INT | FLOAT | RUNE | STRING
                   | "[" ( expr ( "," expr )* )? "]"
                   | "fn" func_sig block
+                  | "new" type call
                   | "&" IDENT subscr*
                   | IDENT ( subscr | call )*
                   | "if" expr "{" expr "}" "else" "{" expr "}"
                   | "(" expr ")"
 
-subscr          ::= "[" expr "]" | "." IDENT
-
 call            ::= "(" ( expr ( "," expr )* )? ")"
+
+subscr          ::= "[" expr "]" | "." IDENT

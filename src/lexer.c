@@ -298,6 +298,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_INTERFACE_KW: name = "InterfaceKw"; break;
   case TOKEN_KIND_LET_KW:       name = "LetKw";       break;
   case TOKEN_KIND_LOOP_KW:      name = "LoopKw";      break;
+  case TOKEN_KIND_NEW_KW:       name = "NewKw";       break;
   case TOKEN_KIND_NULL_KW:      name = "NullKw";      break;
   case TOKEN_KIND_RETURN_KW:    name = "ReturnKw";    break;
   case TOKEN_KIND_RUNE_KW:      name = "RuneKw";      break;
@@ -392,6 +393,7 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "interface", TOKEN_KIND_INTERFACE_KW)) return;
   if (match_keyword(lex, "let", TOKEN_KIND_LET_KW)) return;
   if (match_keyword(lex, "loop", TOKEN_KIND_LOOP_KW)) return;
+  if (match_keyword(lex, "new", TOKEN_KIND_NEW_KW)) return;
   if (match_keyword(lex, "null", TOKEN_KIND_NULL_KW)) return;
   if (match_keyword(lex, "return", TOKEN_KIND_RETURN_KW)) return;
   if (match_keyword(lex, "Rune", TOKEN_KIND_RUNE_KW)) return;

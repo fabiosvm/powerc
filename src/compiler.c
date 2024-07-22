@@ -74,7 +74,6 @@ int main(int argc, char *argv[])
   Parser parser;
   parser_init(&parser, file, buf.data);
   AstNode *ast = parser_parse(&parser);
-  printf("Abstract Syntax Tree:\n\n");
   ast_print(ast);
   return EXIT_SUCCESS;
 }

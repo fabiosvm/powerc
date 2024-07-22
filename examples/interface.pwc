@@ -29,7 +29,7 @@ fn h(self: S) {
 
 fn main() {
   var k: K;
-  k = S();
+  k = new S();
   k.f(); // f() called
   k.g(); // g() called
   k.h(); // h() called
