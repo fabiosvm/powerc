@@ -34,7 +34,7 @@ The main features of the language are:
 - Structs
 - Methods
 - Interfaces
-- Generics (Monomorphization)
+- Generics
 - Automatic Reference Counting
 
 > **Note:** This list will increase as the project evolves.

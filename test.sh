@@ -7,11 +7,11 @@ for f in examples/*.pwc
 do
   echo "$f"
   build/powerc $f
-  n=$((n+1))
   if [ $? -ne 0 ]; then
     fail=$((fail+1))
   fi
   echo "----------------------"
+  n=$((n+1))
 done
 
 echo "$n file(s) tested, $fail failed"
