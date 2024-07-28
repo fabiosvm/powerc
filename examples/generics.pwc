@@ -10,7 +10,7 @@ interface Accountable<T: Number> {
 type Money<T> = Accountable<T>;
 
 struct MoneyImpl<T: Number> {
-  balance: T
+  balance: T;
 }
 
 fn init(self: inout MoneyImpl<T>, balance: T) {

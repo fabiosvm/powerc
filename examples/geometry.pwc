@@ -4,8 +4,8 @@
 // Point
 
 struct Point {
-  x: Double,
-  y: Double
+  x: Double;
+  y: Double;
 }
 
 fn init(self: Point, x: Double, y: Double) {
@@ -22,8 +22,8 @@ fn distance(self: Point, other: Point) -> Double {
 // Circle
 
 struct Circle {
-  center: Point,
-  radius: Double
+  center: Point;
+  radius: Double;
 }
 
 fn init(self: Circle, radius: Double) {
@@ -46,9 +46,9 @@ fn area(self: Circle) -> Double {
 // Rect
 
 struct Rect {
-  center: Point,
-  width: Double,
-  height: Double
+  center: Point;
+  width: Double;
+  height: Double;
 }
 
 fn init(self: Rect, width: Double, height: Double) {

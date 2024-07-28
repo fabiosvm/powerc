@@ -32,6 +32,7 @@
 static inline void unexpected_token_error(Parser *parser);
 static inline AstNode *parse_module(Parser *parser);
 static inline AstNode *parse_decl(Parser *parser);
+static inline AstNode *parse_import_decl(Parser *parser);
 static inline AstNode *parse_type_decl(Parser *parser);
 static inline AstNode *parse_type_params(Parser *parser);
 static inline AstNode *parse_type_param(Parser *parser);
@@ -107,6 +108,8 @@ static inline AstNode *parse_module(Parser *parser)
 
 static inline AstNode *parse_decl(Parser *parser)
 {
+  if (match(parser, TOKEN_KIND_IMPORT_KW))
+    return parse_import_decl(parser);
   if (match(parser, TOKEN_KIND_TYPE_KW))
     return parse_type_decl(parser);
   if (match(parser, TOKEN_KIND_FN_KW))
@@ -119,6 +122,34 @@ static inline AstNode *parse_decl(Parser *parser)
     return parse_let_decl(parser);
   unexpected_token_error(parser);
   return NULL;
+}
+
+static inline AstNode *parse_import_decl(Parser *parser)
+{
+  next(parser);
+  if (!match(parser, TOKEN_KIND_STRING))
+    unexpected_token_error(parser);
+  Token token = current(parser);
+  next(parser);
+  AstNonLeafNode *importDecl = ast_nonleaf_node_new(AST_NODE_KIND_IMPORT_DECL);
+  AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
+  ast_nonleaf_node_append_child(importDecl, ident);
+  if (!match(parser, TOKEN_KIND_AS_KW))
+  {
+    consume(parser, TOKEN_KIND_SEMICOLON);
+    return (AstNode *) importDecl;
+  }
+  next(parser);
+  if (!match(parser, TOKEN_KIND_IDENT))
+    unexpected_token_error(parser);
+  token = current(parser);
+  next(parser);
+  ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
+  AstNonLeafNode *rename = ast_nonleaf_node_new(AST_NODE_KIND_RENAME);
+  ast_nonleaf_node_append_child(rename, (AstNode *) importDecl);
+  ast_nonleaf_node_append_child(rename, ident);
+  consume(parser, TOKEN_KIND_SEMICOLON);
+  return (AstNode *) rename;
 }
 
 static inline AstNode *parse_type_decl(Parser *parser)
@@ -388,13 +419,14 @@ static inline AstNode *parse_struct_decl(Parser *parser)
   }
   AstNode *field = parse_field(parser);
   ast_nonleaf_node_append_child(structDecl, field);
-  while (match(parser, TOKEN_KIND_COMMA))
+  consume(parser, TOKEN_KIND_SEMICOLON);
+  while (!match(parser, TOKEN_KIND_RBRACE))
   {
-    next(parser);
     field = parse_field(parser);
     ast_nonleaf_node_append_child(structDecl, field);
+    consume(parser, TOKEN_KIND_SEMICOLON);
   }
-  consume(parser, TOKEN_KIND_RBRACE);
+  next(parser);
   return (AstNode *) structDecl;
 }
 

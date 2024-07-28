@@ -1,7 +1,9 @@
 
 module          ::= decl* EOF
 
-decl            ::= type_decl | func_decl | struct_decl | interface_decl | let_decl
+decl            ::= import_decl | type_decl | func_decl | struct_decl | interface_decl | let_decl
+
+import_decl     ::= "import" STRING ( "as" IDENT )? ";"
 
 type_decl       ::= "type" IDENT type_params? "=" type ";"
 
@@ -25,7 +27,7 @@ param           ::= IDENT ":" param_type
 
 block           ::= "{" stmt* "}"
 
-struct_decl     ::= "struct" IDENT type_params? "{" ( field ( "," field )* )? "}"
+struct_decl     ::= "struct" IDENT type_params? "{" ( field ";" )* )? "}"
 
 field           ::= IDENT ":" type
 

@@ -1,0 +1,11 @@
+
+// import.pwc
+
+import "io";
+import "./logger" as log;
+
+fn main() {
+  let msg = "Hello, world!";
+  log.info(msg);
+  println(msg);
+}
