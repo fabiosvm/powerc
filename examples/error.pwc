@@ -1,0 +1,59 @@
+
+// error.pwc
+
+struct Result<T, E> {
+  ok: ?T;
+  error: ?E;
+}
+
+fn ok<T>(value: T) -> Result<T, Null> {
+  return new Result(value, null);
+}
+
+fn error<E>(value: E) -> Result<Null, E> {
+  return new Result(null, value);
+}
+
+fn divide(a: Double, b: Double) -> Result<Double, String> {
+  if (b == 0) {
+    return error("division by zero");
+  }
+  return ok(a / b);
+}
+
+fn ok_test() {
+  let a: Double = 10;
+  let b: Double = 2;
+  let result = divide(a, b);
+  assert(result.error == null);
+  println(result.ok); // 5
+}
+
+fn ok_with_try_test() -> Result<Double, String> {
+  let a: Double = 10;
+  let b: Double = 2;
+  let result = try divide(a, b);
+  println(result); // 5
+}
+
+fn error_test() {
+  let a: Double = 10;
+  let b: Double = 0;
+  let result = divide(a, b);
+  assert(result.error != null);
+  println(result.error); // division by zero
+}
+
+fn error_with_try_test() -> Result<Double, String> {
+  let a: Double = 10;
+  let b: Double = 0;
+  let result = try divide(a, b); // Propagate error
+  println(result);
+}
+
+fn main() {
+  ok_test();
+  ok_with_try_test();
+  error_test();
+  error_with_try_test();
+}

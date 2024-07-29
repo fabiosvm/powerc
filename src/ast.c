@@ -86,6 +86,7 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_NEG:
   case AST_NODE_KIND_BNOT:
   case AST_NODE_KIND_NEW:
+  case AST_NODE_KIND_TRY:
   case AST_NODE_KIND_CALL:
   case AST_NODE_KIND_ARRAY:
   case AST_NODE_KIND_ELEMENT:
@@ -187,6 +188,7 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_NEG:            name = "Neg";           break;
   case AST_NODE_KIND_BNOT:           name = "BitNot";        break;
   case AST_NODE_KIND_NEW:            name = "New";           break;
+  case AST_NODE_KIND_TRY:            name = "Try";           break;
   case AST_NODE_KIND_CALL:           name = "Call";          break;
   case AST_NODE_KIND_NULL:           name = "Null";          break;
   case AST_NODE_KIND_FALSE:          name = "False";         break;

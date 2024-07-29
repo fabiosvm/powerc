@@ -90,7 +90,7 @@ prim_expr       ::= "null" | "false" | "true" | INT | FLOAT | RUNE | STRING
                   | "fn" func_sig block
                   | "new" type call
                   | "&" IDENT subscr*
-                  | IDENT ( subscr | call )*
+                  | "try"? IDENT ( subscr | call )*
                   | "if" expr "{" expr "}" "else" "{" expr "}"
                   | "(" expr ")"
 
