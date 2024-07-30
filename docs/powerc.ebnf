@@ -13,29 +13,29 @@ type_param      ::= IDENT ( ":" type )?
 
 type            ::= prim_type ( "+" prim_type )*
 
-prim_type       ::= "fn" "(" ( param_type ( "," param_type )* )? ")" ( "->" type )?
+prim_type       ::= "fn" type "(" ( param_type ( "," param_type )* )? ")"
                   | IDENT ( "<" ( type ( "," type )* )? ">" )?
                   | "?" type
 
 param_type      ::= "inout"? type
 
-func_decl       ::= "fn" IDENT type_params? func_sig block
+func_decl       ::= "fn" type_params? IDENT func_sig block
 
-func_sig        ::= "(" ( param ( "," param )* )? ")" ( "->" type )?
+func_sig        ::= type "(" ( param ( "," param )* )? ")"
 
-param           ::= IDENT ":" param_type
+param           ::= param_type IDENT
 
 block           ::= "{" stmt* "}"
 
 struct_decl     ::= "struct" IDENT type_params? "{" ( field ";" )* )? "}"
 
-field           ::= IDENT ":" type
+field           ::= type IDENT
 
 interface_decl  ::= "interface" IDENT type_params? ( ":" type )? "{" func_proto* "}"
 
 func_proto      ::= "fn" IDENT func_sig ";"
 
-let_decl        ::= "let" IDENT ( ":" type )? "=" expr ";"
+let_decl        ::= "let" IDENT "=" expr ";"
 
 stmt            ::= type_decl
                   | func_decl
@@ -54,7 +54,7 @@ stmt            ::= type_decl
                   | "return" expr? ";"
                   | expr ";"
 
-var_decl        ::= "var" IDENT ":" type ( "=" expr )? ";"
+var_decl        ::= "var" type IDENT ( "=" expr )? ";"
 
 expr            ::= or_expr ( assign_op expr )?
 

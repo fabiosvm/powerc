@@ -1,8 +1,8 @@
 
 // null.pwc
 
-fn main() {
-  var a: ?Int;
+fn Void main() {
+  var ?Int a;
   a = null;
   println(a); // null
   a = 1;

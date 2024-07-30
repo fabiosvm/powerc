@@ -268,7 +268,6 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_DOT:          name = "Dot";         break;
   case TOKEN_KIND_PLUSEQ:       name = "PlusEq";      break;
   case TOKEN_KIND_PLUS:         name = "Plus";        break;
-  case TOKEN_KIND_ARROW:        name = "Arrow";       break;
   case TOKEN_KIND_MINUSEQ:      name = "MinusEq";     break;
   case TOKEN_KIND_MINUS:        name = "Minus";       break;
   case TOKEN_KIND_STAREQ:       name = "StarEq";      break;
@@ -360,7 +359,6 @@ void lexer_next(Lexer *lex)
   if (match_char(lex, '.', TOKEN_KIND_DOT)) return;
   if (match_chars(lex, "+=", TOKEN_KIND_PLUSEQ)) return;
   if (match_char(lex, '+', TOKEN_KIND_PLUS)) return;
-  if (match_chars(lex, "->", TOKEN_KIND_ARROW)) return;
   if (match_chars(lex, "-=", TOKEN_KIND_MINUSEQ)) return;
   if (match_char(lex, '-', TOKEN_KIND_MINUS)) return;
   if (match_chars(lex, "*=", TOKEN_KIND_STAREQ)) return;

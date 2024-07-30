@@ -2,33 +2,33 @@
 // interface.pwc
 
 interface I {
-  fn f(self: Self);
+  fn Void f(Self self);
 }
 
 interface J {
-  fn g(self: Self);
+  fn Void g(Self self);
 }
 
 interface K: I + J {
-  fn h(self: Self);
+  fn Void h(Self self);
 }
 
 struct S {}
 
-fn f(self: S) {
+fn Void f(S self) {
   println("f() called");
 }
 
-fn g(self: S) {
+fn Void g(S self) {
   println("g() called");
 }
 
-fn h(self: S) {
+fn Void h(S self) {
   println("h() called");
 }
 
-fn main() {
-  var k: K;
+fn Void main() {
+  var K k;
   k = new S();
   k.f(); // f() called
   k.g(); // g() called

@@ -1,8 +1,8 @@
 
 // if-else.pwc
 
-fn main() {
-  var a: Bool = true;
+fn Void main() {
+  var Bool a = true;
   if a {
     a = false;
   } else {

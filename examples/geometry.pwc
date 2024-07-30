@@ -4,16 +4,16 @@
 // Point
 
 struct Point {
-  x: Double;
-  y: Double;
+  Double x;
+  Double y;
 }
 
-fn init(self: Point, x: Double, y: Double) {
+fn Void init(Point self, Double x, Double y) {
   self.x = x;
   self.y = y;
 }
 
-fn distance(self: Point, other: Point) -> Double {
+fn Double distance(Point self, Point other) {
   let dx = abs(self.x - other.x);
   let dy = abs(self.y - other.y);
   return sqrt(pow(dx, 2) + pow(dy, 2));
@@ -22,66 +22,66 @@ fn distance(self: Point, other: Point) -> Double {
 // Circle
 
 struct Circle {
-  center: Point;
-  radius: Double;
+  Point center;
+  Double radius;
 }
 
-fn init(self: Circle, radius: Double) {
+fn Void init(Circle self, Double radius) {
   init(self, new Point(0, 0), radius);
 }
 
-fn init(self: Circle, center: Point, radius: Double) {
+fn Void init(Circle self, Point center, Double radius) {
   self.center = center;
   self.radius = radius;
 }
 
-fn perimeter(self: Circle) -> Double {
+fn Double perimeter(Circle self) {
   return 2 * PI * self.radius;
 }
 
-fn area(self: Circle) -> Double {
+fn Double area(Circle self) {
   return PI * pow(self.radius, 2);
 }
 
 // Rect
 
 struct Rect {
-  center: Point;
-  width: Double;
-  height: Double;
+  Point center;
+  Double width;
+  Double height;
 }
 
-fn init(self: Rect, width: Double, height: Double) {
+fn Void init(Rect self, Double width, Double height) {
   init(self, new Point(0, 0), width, height);
 }
 
-fn init(self: Rect, center: Point, width: Double, height: Double) {
+fn Void init(Rect self, Point center, Double width, Double height) {
   self.center = center;
   self.width = width;
   self.height = height;
 }
 
-fn perimeter(self: Rect) -> Double {
+fn Double perimeter(Rect self) {
   return 2 * (self.width + self.height);
 }
 
-fn area(self: Rect) -> Double {
+fn Double area(Rect self) {
   return self.width * self.height;
 }
 
 // Shape
 
 interface Area {
-  fn area(self: Self) -> Double;
+  fn Double area(Self self);
 }
 
 interface Perimeter {
-  fn perimeter(self: Self) -> Double;
+  fn Double perimeter(Self self);
 }
 
 type Shape = Area + Perimeter;
 
-fn main() {
+fn Void main() {
   // Points
   let p1 = new Point(-3, -4);
   let p2 = new Point(3, 4);
@@ -105,7 +105,7 @@ fn main() {
   println(area); // 12
 
   // Shape
-  var shape: Shape;
+  var Shape shape;
   shape = c1;
   println(shape.perimeter()); // 18.849556
   println(shape.area()); // 28.274334

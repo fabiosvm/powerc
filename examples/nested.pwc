@@ -1,10 +1,10 @@
 
 // nested.pwc
 
-fn main() {
-  fn f() {
-    fn g() {
-      fn h() {
+fn Void main() {
+  fn Void f() {
+    fn Void g() {
+      fn Void h() {
         println("h");
       }
       h();

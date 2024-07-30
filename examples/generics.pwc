@@ -2,40 +2,40 @@
 // generics.pwc
 
 interface Accountable<T: Number> {
-  fn deposit(self: inout Self, amount: T);
-  fn withdraw(self: inout Self, amount: T);
-  fn balance(self: Self) -> T;
+  fn Void deposit(inout Self self, T amount);
+  fn Void withdraw(inout Self self, T amount);
+  fn T balance(Self self);
 }
 
 type Money<T> = Accountable<T>;
 
 struct MoneyImpl<T: Number> {
-  balance: T;
+  T balance;
 }
 
-fn init(self: inout MoneyImpl<T>, balance: T) {
+fn Void init(inout MoneyImpl<T> self, T balance) {
   self.balance = balance;
 }
 
-fn deposit(self: inout MoneyImpl<T>, amount: T) {
+fn Void deposit(inout MoneyImpl<T> self, T amount) {
   self.balance = self.balance + amount;
 }
 
-fn withdraw(self: inout MoneyImpl<T>, amount: T) {
+fn Void withdraw(inout MoneyImpl<T> self, T amount) {
   self.balance = self.balance - amount;
 }
 
-fn balance(self: MoneyImpl<T>) -> T {
+fn T balance(MoneyImpl<T> self) {
   return self.balance;
 }
 
-fn new_money_accountable<T: Number>() -> Accountable<T> {
-  var money: MoneyImpl<Float> = new MoneyImpl<>(0);
-  return money; 
+fn <T: Number> Accountable<T> new_money_accountable() {
+  var MoneyImpl<Float> money = new MoneyImpl<>(0);
+  return money;
 }
 
-fn main() {
-  var account: Accountable<Float> = new_money_accountable();
+fn Void main() {
+  var Accountable<Float> account = new_money_accountable();
   account.deposit(1000);
   account.withdraw(50);
   println(account.balance()); // 950

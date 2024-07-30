@@ -1,8 +1,8 @@
 
 // range.pwc
 
-fn main() {
-  var a: Range<Long>;
+fn Void main() {
+  var Range<Long> a;
   a = 0..5;
   print(a); // 0..5
 }

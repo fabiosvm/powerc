@@ -2,56 +2,56 @@
 // error.pwc
 
 struct Result<T, E> {
-  ok: ?T;
-  error: ?E;
+  ?T ok;
+  ?E error;
 }
 
-fn ok<T>(value: T) -> Result<T, Null> {
+fn <T> Result<T, Null> ok(T value) {
   return new Result(value, null);
 }
 
-fn error<E>(value: E) -> Result<Null, E> {
+fn <E> Result<Null, E> error(E value) {
   return new Result(null, value);
 }
 
-fn divide(a: Double, b: Double) -> Result<Double, String> {
+fn Result<Double, String> divide(Double a, Double b) {
   if (b == 0) {
     return error("division by zero");
   }
   return ok(a / b);
 }
 
-fn ok_test() {
-  let a: Double = 10;
-  let b: Double = 2;
+fn Void ok_test() {
+  let a = 10.0;
+  let b = 2.0;
   let result = divide(a, b);
   assert(result.error == null);
   println(result.ok); // 5
 }
 
-fn ok_with_try_test() -> Result<Double, String> {
-  let a: Double = 10;
-  let b: Double = 2;
+fn Result<Double, String> ok_with_try_test() {
+  let a = 10.0;
+  let b = 2.0;
   let result = try divide(a, b);
   println(result); // 5
 }
 
-fn error_test() {
-  let a: Double = 10;
-  let b: Double = 0;
+fn Void error_test() {
+  let a = 10.0;
+  let b = 0.0;
   let result = divide(a, b);
   assert(result.error != null);
   println(result.error); // division by zero
 }
 
-fn error_with_try_test() -> Result<Double, String> {
-  let a: Double = 10;
-  let b: Double = 0;
+fn Result<Double, String> error_with_try_test() {
+  let a = 10.0;
+  let b = 0.0;
   let result = try divide(a, b); // Propagate error
   println(result);
 }
 
-fn main() {
+fn Void main() {
   ok_test();
   ok_with_try_test();
   error_test();

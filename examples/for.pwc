@@ -1,7 +1,7 @@
 
 // for.pwc
 
-fn main() {
+fn Void main() {
   let a = 0..5;
   for i in a {
     print(i); // 01234

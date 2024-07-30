@@ -1,6 +1,6 @@
 
 // hello.pwc
 
-fn main() {
+fn Void main() {
   println("Hello, world!");
 }

@@ -3,6 +3,6 @@
 
 let PI = 3.14;
 
-fn main() {
+fn Void main() {
   println(PI);
 }
