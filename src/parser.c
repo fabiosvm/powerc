@@ -578,11 +578,15 @@ static inline AstNode *parse_if_stmt(Parser *parser)
 {
   next(parser);
   AstNode *expr = parse_expr(parser);
+  if (!match(parser, TOKEN_KIND_LBRACE))
+    unexpected_token_error(parser);
   AstNode *thenBlock = parse_block(parser);
   AstNode *elseBlock = NULL;
   if (match(parser, TOKEN_KIND_ELSE_KW))
   {
     next(parser);
+    if (!match(parser, TOKEN_KIND_LBRACE))
+      unexpected_token_error(parser);
     elseBlock = parse_block(parser);
   }
   AstNonLeafNode *ifStmt = ast_nonleaf_node_new(AST_NODE_KIND_IF);
@@ -595,6 +599,8 @@ static inline AstNode *parse_if_stmt(Parser *parser)
 static inline AstNode *parse_loop_stmt(Parser *parser)
 {
   next(parser);
+  if (!match(parser, TOKEN_KIND_LBRACE))
+    unexpected_token_error(parser);
   AstNode *block = parse_block(parser);
   AstNonLeafNode *loopStmt = ast_nonleaf_node_new(AST_NODE_KIND_LOOP);
   ast_nonleaf_node_append_child(loopStmt, block);
@@ -605,6 +611,8 @@ static inline AstNode *parse_while_stmt(Parser *parser)
 {
   next(parser);
   AstNode *expr = parse_expr(parser);
+  if (!match(parser, TOKEN_KIND_LBRACE))
+    unexpected_token_error(parser);
   AstNode *block = parse_block(parser);
   AstNonLeafNode *whileStmt = ast_nonleaf_node_new(AST_NODE_KIND_WHILE);
   ast_nonleaf_node_append_child(whileStmt, expr);
@@ -615,6 +623,8 @@ static inline AstNode *parse_while_stmt(Parser *parser)
 static inline AstNode *parse_do_while_stmt(Parser *parser)
 {
   next(parser);
+  if (!match(parser, TOKEN_KIND_LBRACE))
+    unexpected_token_error(parser);
   AstNode *block = parse_block(parser);
   consume(parser, TOKEN_KIND_WHILE_KW);
   AstNode *expr = parse_expr(parser);
@@ -634,6 +644,8 @@ static inline AstNode *parse_for_stmt(Parser *parser)
   next(parser);
   consume(parser, TOKEN_KIND_IN_KW);
   AstNode *expr = parse_expr(parser);
+  if (!match(parser, TOKEN_KIND_LBRACE))
+    unexpected_token_error(parser);
   AstNode *block = parse_block(parser);
   AstNonLeafNode *forStmt = ast_nonleaf_node_new(AST_NODE_KIND_FOR);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
