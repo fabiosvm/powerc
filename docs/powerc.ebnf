@@ -62,17 +62,17 @@ assign_op       ::= "=" | "|=" | "^=" | "&=" | "<<=" | ">>="
 
 or_expr         ::= and_expr ( "||" and_expr )*
 
-and_expr        ::= eq_expr ( "&&" eq_expr )*
-
-eq_expr         ::= comp_expr ( ( "==" | "!=" ) comp_expr )*
-
-comp_expr       ::= bor_expr ( ( "<" | "<=" | ">" | ">=" ) bor_expr )*
+and_expr        ::= bor_expr ( "&&" bor_expr )*
 
 bor_expr        ::= bxor_expr ( "|" bxor_expr )*
 
 bxor_expr       ::= band_expr ( "^" band_expr )*
 
-band_expr       ::= shift_expr ( "&" shift_expr )*
+band_expr       ::= eq_expr ( "&" eq_expr )*
+
+eq_expr         ::= comp_expr ( ( "==" | "!=" ) comp_expr )*
+
+comp_expr       ::= shift_expr ( ( "<" | "<=" | ">" | ">=" ) shift_expr )*
 
 shift_expr      ::= range_expr ( ( "<<" | ">>" ) range_expr )*
 

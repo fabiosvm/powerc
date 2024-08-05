@@ -62,11 +62,11 @@ static inline AstNode *parse_return_stmt(Parser *parser);
 static inline AstNode *parse_expr(Parser *parser);
 static inline AstNode *parse_or_expr(Parser *parser);
 static inline AstNode *parse_and_expr(Parser *parser);
-static inline AstNode *parse_eq_expr(Parser *parser);
-static inline AstNode *parse_comp_expr(Parser *parser);
 static inline AstNode *parse_bor_expr(Parser *parser);
 static inline AstNode *parse_bxor_expr(Parser *parser);
 static inline AstNode *parse_band_expr(Parser *parser);
+static inline AstNode *parse_eq_expr(Parser *parser);
+static inline AstNode *parse_comp_expr(Parser *parser);
 static inline AstNode *parse_shift_expr(Parser *parser);
 static inline AstNode *parse_range_expr(Parser *parser);
 static inline AstNode *parse_add_expr(Parser *parser);
@@ -773,95 +773,15 @@ static inline AstNode *parse_or_expr(Parser *parser)
 
 static inline AstNode *parse_and_expr(Parser *parser)
 {
-  AstNode *lhs = parse_eq_expr(parser);
+  AstNode *lhs = parse_bor_expr(parser);
   while (match(parser, TOKEN_KIND_AMPAMP))
   {
     next(parser);
-    AstNode *rhs = parse_eq_expr(parser);
+    AstNode *rhs = parse_bor_expr(parser);
     AstNonLeafNode *and = ast_nonleaf_node_new(AST_NODE_KIND_AND);
     ast_nonleaf_node_append_child(and, lhs);
     ast_nonleaf_node_append_child(and, rhs);
     lhs = (AstNode *) and;
-  }
-  return lhs;
-}
-
-static inline AstNode *parse_eq_expr(Parser *parser)
-{
-  AstNode *lhs = parse_comp_expr(parser);
-  for (;;)
-  {
-    if (match(parser, TOKEN_KIND_EQEQ))
-    {
-      next(parser);
-      AstNode *rhs = parse_comp_expr(parser);
-      AstNonLeafNode *eq = ast_nonleaf_node_new(AST_NODE_KIND_EQ);
-      ast_nonleaf_node_append_child(eq, lhs);
-      ast_nonleaf_node_append_child(eq, rhs);
-      lhs = (AstNode *) eq;
-      continue;
-    }
-    if (match(parser, TOKEN_KIND_BANGEQ))
-    {
-      next(parser);
-      AstNode *rhs = parse_comp_expr(parser);
-      AstNonLeafNode *ne = ast_nonleaf_node_new(AST_NODE_KIND_NE);
-      ast_nonleaf_node_append_child(ne, lhs);
-      ast_nonleaf_node_append_child(ne, rhs);
-      lhs = (AstNode *) ne;
-      continue;
-    }
-    break;
-  }
-  return lhs;
-}
-
-static inline AstNode *parse_comp_expr(Parser *parser)
-{
-  AstNode *lhs = parse_bor_expr(parser);
-  for (;;)
-  {
-    if (match(parser, TOKEN_KIND_LT))
-    {
-      next(parser);
-      AstNode *rhs = parse_bor_expr(parser);
-      AstNonLeafNode *lt = ast_nonleaf_node_new(AST_NODE_KIND_LT);
-      ast_nonleaf_node_append_child(lt, lhs);
-      ast_nonleaf_node_append_child(lt, rhs);
-      lhs = (AstNode *) lt;
-      continue;
-    }
-    if (match(parser, TOKEN_KIND_LE))
-    {
-      next(parser);
-      AstNode *rhs = parse_bor_expr(parser);
-      AstNonLeafNode *le = ast_nonleaf_node_new(AST_NODE_KIND_LE);
-      ast_nonleaf_node_append_child(le, lhs);
-      ast_nonleaf_node_append_child(le, rhs);
-      lhs = (AstNode *) le;
-      continue;
-    }
-    if (match(parser, TOKEN_KIND_GT))
-    {
-      next(parser);
-      AstNode *rhs = parse_bor_expr(parser);
-      AstNonLeafNode *gt = ast_nonleaf_node_new(AST_NODE_KIND_GT);
-      ast_nonleaf_node_append_child(gt, lhs);
-      ast_nonleaf_node_append_child(gt, rhs);
-      lhs = (AstNode *) gt;
-      continue;
-    }
-    if (match(parser, TOKEN_KIND_GE))
-    {
-      next(parser);
-      AstNode *rhs = parse_bor_expr(parser);
-      AstNonLeafNode *ge = ast_nonleaf_node_new(AST_NODE_KIND_GE);
-      ast_nonleaf_node_append_child(ge, lhs);
-      ast_nonleaf_node_append_child(ge, rhs);
-      lhs = (AstNode *) ge;
-      continue;
-    }
-    break;
   }
   return lhs;
 }
@@ -898,15 +818,95 @@ static inline AstNode *parse_bxor_expr(Parser *parser)
 
 static inline AstNode *parse_band_expr(Parser *parser)
 {
-  AstNode *lhs = parse_shift_expr(parser);
+  AstNode *lhs = parse_eq_expr(parser);
   while (match(parser, TOKEN_KIND_AMP))
   {
     next(parser);
-    AstNode *rhs = parse_shift_expr(parser);
+    AstNode *rhs = parse_eq_expr(parser);
     AstNonLeafNode *band = ast_nonleaf_node_new(AST_NODE_KIND_BAND);
     ast_nonleaf_node_append_child(band, lhs);
     ast_nonleaf_node_append_child(band, rhs);
     lhs = (AstNode *) band;
+  }
+  return lhs;
+}
+
+static inline AstNode *parse_eq_expr(Parser *parser)
+{
+  AstNode *lhs = parse_comp_expr(parser);
+  for (;;)
+  {
+    if (match(parser, TOKEN_KIND_EQEQ))
+    {
+      next(parser);
+      AstNode *rhs = parse_comp_expr(parser);
+      AstNonLeafNode *eq = ast_nonleaf_node_new(AST_NODE_KIND_EQ);
+      ast_nonleaf_node_append_child(eq, lhs);
+      ast_nonleaf_node_append_child(eq, rhs);
+      lhs = (AstNode *) eq;
+      continue;
+    }
+    if (match(parser, TOKEN_KIND_BANGEQ))
+    {
+      next(parser);
+      AstNode *rhs = parse_comp_expr(parser);
+      AstNonLeafNode *ne = ast_nonleaf_node_new(AST_NODE_KIND_NE);
+      ast_nonleaf_node_append_child(ne, lhs);
+      ast_nonleaf_node_append_child(ne, rhs);
+      lhs = (AstNode *) ne;
+      continue;
+    }
+    break;
+  }
+  return lhs;
+}
+
+static inline AstNode *parse_comp_expr(Parser *parser)
+{
+  AstNode *lhs = parse_shift_expr(parser);
+  for (;;)
+  {
+    if (match(parser, TOKEN_KIND_LT))
+    {
+      next(parser);
+      AstNode *rhs = parse_shift_expr(parser);
+      AstNonLeafNode *lt = ast_nonleaf_node_new(AST_NODE_KIND_LT);
+      ast_nonleaf_node_append_child(lt, lhs);
+      ast_nonleaf_node_append_child(lt, rhs);
+      lhs = (AstNode *) lt;
+      continue;
+    }
+    if (match(parser, TOKEN_KIND_LE))
+    {
+      next(parser);
+      AstNode *rhs = parse_shift_expr(parser);
+      AstNonLeafNode *le = ast_nonleaf_node_new(AST_NODE_KIND_LE);
+      ast_nonleaf_node_append_child(le, lhs);
+      ast_nonleaf_node_append_child(le, rhs);
+      lhs = (AstNode *) le;
+      continue;
+    }
+    if (match(parser, TOKEN_KIND_GT))
+    {
+      next(parser);
+      AstNode *rhs = parse_shift_expr(parser);
+      AstNonLeafNode *gt = ast_nonleaf_node_new(AST_NODE_KIND_GT);
+      ast_nonleaf_node_append_child(gt, lhs);
+      ast_nonleaf_node_append_child(gt, rhs);
+      lhs = (AstNode *) gt;
+      continue;
+    }
+    if (match(parser, TOKEN_KIND_GE))
+    {
+      next(parser);
+      AstNode *rhs = parse_shift_expr(parser);
+      AstNonLeafNode *ge = ast_nonleaf_node_new(AST_NODE_KIND_GE);
+      ast_nonleaf_node_append_child(ge, lhs);
+      ast_nonleaf_node_append_child(ge, rhs);
+      lhs = (AstNode *) ge;
+      continue;
+    }
+    break;
   }
   return lhs;
 }
