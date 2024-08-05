@@ -1,0 +1,8 @@
+
+// void.pwc
+
+fn Void main() {
+  var Void a;
+  a = void;
+  println(a); // ERROR: no suitable function overload found
+}

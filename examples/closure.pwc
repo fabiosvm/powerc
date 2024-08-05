@@ -1,10 +1,10 @@
 
 // closure.pwc
 
-fn main() {
-  let a: String = "Hello";
-  var f: fn ();
-  f = fn () {
+fn Void main() {
+  let a = "Hello";
+  var fn Void () f;
+  f = fn Void () {
     println(a);
   };
   f(); // Hello

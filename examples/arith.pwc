@@ -1,17 +1,17 @@
 
 // arith.pwc
 
-fn square(x: Int) -> Int {
+fn Int square(Int x) {
   return x * x;
 }
 
-fn add_one(x: Int) -> Int {
+fn Int add_one(Int x) {
   return x + 1;
 }
 
-fn main() -> Int {
-  let a: Int = 3;
-  var b: Int;
+fn Int main() {
+  let a = 3;
+  var Int b;
   b = add_one(square(a));
   println(b); // 10
   return 0;

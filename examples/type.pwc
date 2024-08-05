@@ -3,8 +3,8 @@
 
 type Currency = Float;
 
-fn main() {
-  var a: Currency;
+fn Void main() {
+  var Currency a;
   a = 1.99;
   println(a); // 1.99
 }

@@ -1,13 +1,13 @@
 
 // inout.pwc
 
-fn mutate(x: inout Int) {
+fn Void mutate(inout Int x) {
   x = 2;
 }
 
-fn main() {
-  var a: Int = 1;
-  var b: Array<Int> = [1, 2, 3];
+fn Void main() {
+  var Int a = 1;
+  var Array<Int> b = [1, 2, 3];
   mutate(&a);
   println(a); // 2
   mutate(&b[0]);

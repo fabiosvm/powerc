@@ -1,7 +1,7 @@
 
 // if-expr.pwc
 
-fn main() {
+fn Void main() {
   let a = true;
   let b = if a { 1 } else { 2 };
   println(b); // 1

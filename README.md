@@ -12,7 +12,7 @@ PowerC is a high-level programming language that transpiles to C.
 Here is a classic fibonacci function in PowerC:
 
 ```mojo
-fn fib(n: Int) -> Int {
+fn Int fib(Int n)  {
   if n < 2 {
     return n;
   }

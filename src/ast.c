@@ -44,7 +44,6 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_REF:
   case AST_NODE_KIND_FUNC_TYPE:
   case AST_NODE_KIND_TYPE:
-  case AST_NODE_KIND_NULLABLE:
   case AST_NODE_KIND_BLOCK:
   case AST_NODE_KIND_ASSIGN:
   case AST_NODE_KIND_BOR_ASSIGN:
@@ -103,7 +102,7 @@ static inline void node_print(AstNode *node, int level)
     break;
   case AST_NODE_KIND_BREAK:
   case AST_NODE_KIND_CONTINUE:
-  case AST_NODE_KIND_NULL:
+  case AST_NODE_KIND_VOID:
   case AST_NODE_KIND_FALSE:
   case AST_NODE_KIND_TRUE:
     printf("%s\n", name);
@@ -144,7 +143,6 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_REF:            name = "Ref";           break;
   case AST_NODE_KIND_FUNC_TYPE:      name = "FuncType";      break;
   case AST_NODE_KIND_TYPE:           name = "Type";          break;
-  case AST_NODE_KIND_NULLABLE:       name = "Nullable";      break;
   case AST_NODE_KIND_BLOCK:          name = "Block";         break;
   case AST_NODE_KIND_ASSIGN:         name = "Assign";        break;
   case AST_NODE_KIND_BOR_ASSIGN:     name = "BitOrAssign";   break;
@@ -190,7 +188,7 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_NEW:            name = "New";           break;
   case AST_NODE_KIND_TRY:            name = "Try";           break;
   case AST_NODE_KIND_CALL:           name = "Call";          break;
-  case AST_NODE_KIND_NULL:           name = "Null";          break;
+  case AST_NODE_KIND_VOID:           name = "Void";          break;
   case AST_NODE_KIND_FALSE:          name = "False";         break;
   case AST_NODE_KIND_TRUE:           name = "True";          break;
   case AST_NODE_KIND_INT:            name = "Int";           break;

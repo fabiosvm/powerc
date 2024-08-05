@@ -1,10 +1,10 @@
 
 // loop.pwc
 
-fn main() {
+fn Void main() {
   let min = 5;
   let max = 10;
-  var i: Int = 0;
+  var Int i = 0;
   loop {
     i += 1;
     if i < min {

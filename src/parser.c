@@ -41,12 +41,13 @@ static inline AstNode *parse_prim_type(Parser *parser);
 static inline AstNode *parse_func_type(Parser *parser);
 static inline AstNode *parse_param_type(Parser *parser);
 static inline AstNode *parse_type_def(Parser *parser);
-static inline AstNode *parse_func_decl(Parser *parser, bool isAnon, bool isProto);
+static inline AstNode *parse_func_decl(Parser *parser, bool isAnon);
 static inline AstNode *parse_param(Parser *parser);
 static inline AstNode *parse_block(Parser *parser);
 static inline AstNode *parse_struct_decl(Parser *parser);
 static inline AstNode *parse_field(Parser *parser);
 static inline AstNode *parse_interface_decl(Parser *parser);
+static inline AstNode *parse_method_proto(Parser *parser);
 static inline AstNode *parse_let_decl(Parser *parser);
 static inline AstNode *parse_var_decl(Parser *parser);
 static inline AstNode *parse_stmt(Parser *parser);
@@ -61,11 +62,11 @@ static inline AstNode *parse_return_stmt(Parser *parser);
 static inline AstNode *parse_expr(Parser *parser);
 static inline AstNode *parse_or_expr(Parser *parser);
 static inline AstNode *parse_and_expr(Parser *parser);
-static inline AstNode *parse_eq_expr(Parser *parser);
-static inline AstNode *parse_comp_expr(Parser *parser);
 static inline AstNode *parse_bor_expr(Parser *parser);
 static inline AstNode *parse_bxor_expr(Parser *parser);
 static inline AstNode *parse_band_expr(Parser *parser);
+static inline AstNode *parse_eq_expr(Parser *parser);
+static inline AstNode *parse_comp_expr(Parser *parser);
 static inline AstNode *parse_shift_expr(Parser *parser);
 static inline AstNode *parse_range_expr(Parser *parser);
 static inline AstNode *parse_add_expr(Parser *parser);
@@ -114,7 +115,7 @@ static inline AstNode *parse_decl(Parser *parser)
   if (match(parser, TOKEN_KIND_TYPE_KW))
     return parse_type_decl(parser);
   if (match(parser, TOKEN_KIND_FN_KW))
-    return parse_func_decl(parser, false, false);
+    return parse_func_decl(parser, false);
   if (match(parser, TOKEN_KIND_STRUCT_KW))
     return parse_struct_decl(parser);
   if (match(parser, TOKEN_KIND_INTERFACE_KW))
@@ -228,14 +229,6 @@ static inline AstNode *parse_prim_type(Parser *parser)
     return parse_func_type(parser);
   if (match(parser, TOKEN_KIND_IDENT))
     return parse_type_def(parser);
-  if (match(parser, TOKEN_KIND_QMARK))
-  {
-    next(parser);
-    AstNode *type = parse_type(parser);
-    AstNonLeafNode *nullable = ast_nonleaf_node_new(AST_NODE_KIND_NULLABLE);
-    ast_nonleaf_node_append_child(nullable, type);
-    return (AstNode *) nullable;
-  }
   unexpected_token_error(parser);
   return NULL;
 }
@@ -243,6 +236,7 @@ static inline AstNode *parse_prim_type(Parser *parser)
 static inline AstNode *parse_func_type(Parser *parser)
 {
   next(parser);
+  AstNode *retType = parse_type(parser);
   consume(parser, TOKEN_KIND_LPAREN);
   AstNonLeafNode *params = ast_nonleaf_node_new(AST_NODE_KIND_PARAMS);
   if (match(parser, TOKEN_KIND_RPAREN))
@@ -259,17 +253,11 @@ static inline AstNode *parse_func_type(Parser *parser)
     ast_nonleaf_node_append_child(params, param);
   }
   consume(parser, TOKEN_KIND_RPAREN);
-  AstNode *retType;
+AstNonLeafNode *funcType;
 end:
-  retType = NULL;
-  if (match(parser, TOKEN_KIND_ARROW))
-  {
-    next(parser);
-    retType = parse_type(parser);
-  }
-  AstNonLeafNode *funcType = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_TYPE);
-  ast_nonleaf_node_append_child(funcType, (AstNode *) params);
+  funcType = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_TYPE);
   ast_nonleaf_node_append_child(funcType, retType);
+  ast_nonleaf_node_append_child(funcType, (AstNode *) params);
   return (AstNode *) funcType;
 }
 
@@ -313,9 +301,10 @@ static inline AstNode *parse_type_def(Parser *parser)
   return (AstNode *) typeDef;
 }
 
-static inline AstNode *parse_func_decl(Parser *parser, bool isAnon, bool isProto)
+static inline AstNode *parse_func_decl(Parser *parser, bool isAnon)
 {
   next(parser);
+  AstNode *retType = parse_type(parser);
   AstNode *ident = NULL;
   if (!isAnon)
   {
@@ -325,15 +314,12 @@ static inline AstNode *parse_func_decl(Parser *parser, bool isAnon, bool isProto
     next(parser);
     ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
   }
-  AstNode *typeParams = NULL;
-  if (!isAnon && !isProto)
-    typeParams = parse_type_params(parser);
   consume(parser, TOKEN_KIND_LPAREN);
   AstNonLeafNode *params = ast_nonleaf_node_new(AST_NODE_KIND_PARAMS);
   if (match(parser, TOKEN_KIND_RPAREN))
   {
     next(parser);
-    goto ret;
+    goto end;
   }
   AstNode *param = parse_param(parser);
   ast_nonleaf_node_append_child(params, param);
@@ -344,46 +330,29 @@ static inline AstNode *parse_func_decl(Parser *parser, bool isAnon, bool isProto
     ast_nonleaf_node_append_child(params, param);
   }
   consume(parser, TOKEN_KIND_RPAREN);
-  AstNode *retType;
-ret:
-  retType = NULL;
-  if (match(parser, TOKEN_KIND_ARROW))
-  {
-    next(parser);
-    retType = parse_type(parser);
-  }
-  AstNode *block = NULL;
-  if (isProto)
-  {
-    consume(parser, TOKEN_KIND_SEMICOLON);
-    goto end;
-  }
+end:
   if (!match(parser, TOKEN_KIND_LBRACE))
     unexpected_token_error(parser);
-  block = parse_block(parser);
-  AstNonLeafNode *funcDecl;
-end:
-  funcDecl = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_DECL);
-  ast_nonleaf_node_append_child(funcDecl, ident);
-  ast_nonleaf_node_append_child(funcDecl, typeParams);
-  ast_nonleaf_node_append_child(funcDecl, (AstNode *) params);
+  AstNode *block = parse_block(parser);
+  AstNonLeafNode *funcDecl = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_DECL);
   ast_nonleaf_node_append_child(funcDecl, retType);
+  ast_nonleaf_node_append_child(funcDecl, ident);
+  ast_nonleaf_node_append_child(funcDecl, (AstNode *) params);
   ast_nonleaf_node_append_child(funcDecl, block);
   return (AstNode *) funcDecl;
 }
 
 static inline AstNode *parse_param(Parser *parser)
 {
+  AstNode *type = parse_param_type(parser);
   if (!match(parser, TOKEN_KIND_IDENT))
     unexpected_token_error(parser);
   Token token = current(parser);
   next(parser);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
-  consume(parser, TOKEN_KIND_COLON);
-  AstNode *type = parse_param_type(parser);
   AstNonLeafNode *param = ast_nonleaf_node_new(AST_NODE_KIND_VAR_DECL);
-  ast_nonleaf_node_append_child(param, ident);
   ast_nonleaf_node_append_child(param, type);
+  ast_nonleaf_node_append_child(param, ident);
   return (AstNode *) param;
 }
 
@@ -420,12 +389,10 @@ static inline AstNode *parse_struct_decl(Parser *parser)
   }
   AstNode *field = parse_field(parser);
   ast_nonleaf_node_append_child(structDecl, field);
-  consume(parser, TOKEN_KIND_SEMICOLON);
   while (!match(parser, TOKEN_KIND_RBRACE))
   {
     field = parse_field(parser);
     ast_nonleaf_node_append_child(structDecl, field);
-    consume(parser, TOKEN_KIND_SEMICOLON);
   }
   next(parser);
   return (AstNode *) structDecl;
@@ -433,16 +400,16 @@ static inline AstNode *parse_struct_decl(Parser *parser)
 
 static inline AstNode *parse_field(Parser *parser)
 {
+  AstNode *type = parse_type(parser);
   if (!match(parser, TOKEN_KIND_IDENT))
     unexpected_token_error(parser);
   Token token = current(parser);
   next(parser);
-  consume(parser, TOKEN_KIND_COLON);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
-  AstNode *type = parse_type(parser);
+  consume(parser, TOKEN_KIND_SEMICOLON);
   AstNonLeafNode *field = ast_nonleaf_node_new(AST_NODE_KIND_VAR_DECL);
-  ast_nonleaf_node_append_child(field, ident);
   ast_nonleaf_node_append_child(field, type);
+  ast_nonleaf_node_append_child(field, ident);
   return (AstNode *) field;
 }
 
@@ -471,17 +438,49 @@ static inline AstNode *parse_interface_decl(Parser *parser)
     next(parser);
     return (AstNode *) interfaceDecl;
   }
-  if (!match(parser, TOKEN_KIND_FN_KW))
-    unexpected_token_error(parser);
-  AstNode *funcProto = parse_func_decl(parser, false, true);
-  ast_nonleaf_node_append_child(interfaceDecl, funcProto);
-  while (match(parser, TOKEN_KIND_FN_KW))
+  AstNode *methodProto = parse_method_proto(parser);
+  ast_nonleaf_node_append_child(interfaceDecl, methodProto);
+  while (!match(parser, TOKEN_KIND_RBRACE))
   {
-    funcProto = parse_func_decl(parser, false, true);
-    ast_nonleaf_node_append_child(interfaceDecl, funcProto);
+    methodProto = parse_method_proto(parser);
+    ast_nonleaf_node_append_child(interfaceDecl, methodProto);
   }
-  consume(parser, TOKEN_KIND_RBRACE);
+  next(parser);
   return (AstNode *) interfaceDecl;
+}
+
+static inline AstNode *parse_method_proto(Parser *parser)
+{
+  if (!match(parser, TOKEN_KIND_IDENT))
+    unexpected_token_error(parser);
+  Token token = current(parser);
+  next(parser);
+  AstNode *retType = parse_type(parser);
+  AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
+  consume(parser, TOKEN_KIND_LPAREN);
+  AstNonLeafNode *params = ast_nonleaf_node_new(AST_NODE_KIND_PARAMS);
+  if (match(parser, TOKEN_KIND_RPAREN))
+  {
+    next(parser);
+    goto end;
+  }
+  AstNode *param = parse_param(parser);
+  ast_nonleaf_node_append_child(params, param);
+  while (match(parser, TOKEN_KIND_COMMA))
+  {
+    next(parser);
+    param = parse_param(parser);
+    ast_nonleaf_node_append_child(params, param);
+  }
+  consume(parser, TOKEN_KIND_RPAREN);
+end:
+  consume(parser, TOKEN_KIND_SEMICOLON);
+  AstNonLeafNode *methodProto = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_DECL);
+  ast_nonleaf_node_append_child(methodProto, retType);
+  ast_nonleaf_node_append_child(methodProto, ident);
+  ast_nonleaf_node_append_child(methodProto, (AstNode *) params);
+  ast_nonleaf_node_append_child(methodProto, NULL);
+  return (AstNode *) methodProto;
 }
 
 static inline AstNode *parse_let_decl(Parser *parser)
@@ -492,18 +491,11 @@ static inline AstNode *parse_let_decl(Parser *parser)
   Token token = current(parser);
   next(parser);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
-  AstNode *type = NULL;
-  if (match(parser, TOKEN_KIND_COLON))
-  {
-    next(parser);
-    type = parse_type(parser);
-  }
   consume(parser, TOKEN_KIND_EQ);
   AstNode *expr = parse_expr(parser);
   consume(parser, TOKEN_KIND_SEMICOLON);
   AstNonLeafNode *letDecl = ast_nonleaf_node_new(AST_NODE_KIND_LET_DECL);
   ast_nonleaf_node_append_child(letDecl, ident);
-  ast_nonleaf_node_append_child(letDecl, type);
   AstNonLeafNode *assign = ast_nonleaf_node_new(AST_NODE_KIND_ASSIGN);
   ast_nonleaf_node_append_child(assign, (AstNode *) letDecl);
   ast_nonleaf_node_append_child(assign, expr);
@@ -513,16 +505,15 @@ static inline AstNode *parse_let_decl(Parser *parser)
 static inline AstNode *parse_var_decl(Parser *parser)
 {
   next(parser);
+  AstNode *type = parse_type(parser);
   if (!match(parser, TOKEN_KIND_IDENT))
     unexpected_token_error(parser);
   Token token = current(parser);
   next(parser);
-  consume(parser, TOKEN_KIND_COLON);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
-  AstNode *type = parse_type(parser);
   AstNonLeafNode *varDecl = ast_nonleaf_node_new(AST_NODE_KIND_VAR_DECL);
-  ast_nonleaf_node_append_child(varDecl, ident);
   ast_nonleaf_node_append_child(varDecl, type);
+  ast_nonleaf_node_append_child(varDecl, ident);
   if (match(parser, TOKEN_KIND_EQ))
   {
     next(parser);
@@ -542,7 +533,7 @@ static inline AstNode *parse_stmt(Parser *parser)
   if (match(parser, TOKEN_KIND_TYPE_KW))
     return parse_type_decl(parser);
   if (match(parser, TOKEN_KIND_FN_KW))
-    return parse_func_decl(parser, false, false);
+    return parse_func_decl(parser, false);
   if (match(parser, TOKEN_KIND_STRUCT_KW))
     return parse_struct_decl(parser);
   if (match(parser, TOKEN_KIND_INTERFACE_KW))
@@ -642,13 +633,13 @@ static inline AstNode *parse_for_stmt(Parser *parser)
     unexpected_token_error(parser);
   Token token = current(parser);
   next(parser);
+  AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
   consume(parser, TOKEN_KIND_IN_KW);
   AstNode *expr = parse_expr(parser);
   if (!match(parser, TOKEN_KIND_LBRACE))
     unexpected_token_error(parser);
   AstNode *block = parse_block(parser);
   AstNonLeafNode *forStmt = ast_nonleaf_node_new(AST_NODE_KIND_FOR);
-  AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
   ast_nonleaf_node_append_child(forStmt, ident);
   ast_nonleaf_node_append_child(forStmt, expr);
   ast_nonleaf_node_append_child(forStmt, block);
@@ -782,95 +773,15 @@ static inline AstNode *parse_or_expr(Parser *parser)
 
 static inline AstNode *parse_and_expr(Parser *parser)
 {
-  AstNode *lhs = parse_eq_expr(parser);
+  AstNode *lhs = parse_bor_expr(parser);
   while (match(parser, TOKEN_KIND_AMPAMP))
   {
     next(parser);
-    AstNode *rhs = parse_eq_expr(parser);
+    AstNode *rhs = parse_bor_expr(parser);
     AstNonLeafNode *and = ast_nonleaf_node_new(AST_NODE_KIND_AND);
     ast_nonleaf_node_append_child(and, lhs);
     ast_nonleaf_node_append_child(and, rhs);
     lhs = (AstNode *) and;
-  }
-  return lhs;
-}
-
-static inline AstNode *parse_eq_expr(Parser *parser)
-{
-  AstNode *lhs = parse_comp_expr(parser);
-  for (;;)
-  {
-    if (match(parser, TOKEN_KIND_EQEQ))
-    {
-      next(parser);
-      AstNode *rhs = parse_comp_expr(parser);
-      AstNonLeafNode *eq = ast_nonleaf_node_new(AST_NODE_KIND_EQ);
-      ast_nonleaf_node_append_child(eq, lhs);
-      ast_nonleaf_node_append_child(eq, rhs);
-      lhs = (AstNode *) eq;
-      continue;
-    }
-    if (match(parser, TOKEN_KIND_BANGEQ))
-    {
-      next(parser);
-      AstNode *rhs = parse_comp_expr(parser);
-      AstNonLeafNode *ne = ast_nonleaf_node_new(AST_NODE_KIND_NE);
-      ast_nonleaf_node_append_child(ne, lhs);
-      ast_nonleaf_node_append_child(ne, rhs);
-      lhs = (AstNode *) ne;
-      continue;
-    }
-    break;
-  }
-  return lhs;
-}
-
-static inline AstNode *parse_comp_expr(Parser *parser)
-{
-  AstNode *lhs = parse_bor_expr(parser);
-  for (;;)
-  {
-    if (match(parser, TOKEN_KIND_LT))
-    {
-      next(parser);
-      AstNode *rhs = parse_bor_expr(parser);
-      AstNonLeafNode *lt = ast_nonleaf_node_new(AST_NODE_KIND_LT);
-      ast_nonleaf_node_append_child(lt, lhs);
-      ast_nonleaf_node_append_child(lt, rhs);
-      lhs = (AstNode *) lt;
-      continue;
-    }
-    if (match(parser, TOKEN_KIND_LE))
-    {
-      next(parser);
-      AstNode *rhs = parse_bor_expr(parser);
-      AstNonLeafNode *le = ast_nonleaf_node_new(AST_NODE_KIND_LE);
-      ast_nonleaf_node_append_child(le, lhs);
-      ast_nonleaf_node_append_child(le, rhs);
-      lhs = (AstNode *) le;
-      continue;
-    }
-    if (match(parser, TOKEN_KIND_GT))
-    {
-      next(parser);
-      AstNode *rhs = parse_bor_expr(parser);
-      AstNonLeafNode *gt = ast_nonleaf_node_new(AST_NODE_KIND_GT);
-      ast_nonleaf_node_append_child(gt, lhs);
-      ast_nonleaf_node_append_child(gt, rhs);
-      lhs = (AstNode *) gt;
-      continue;
-    }
-    if (match(parser, TOKEN_KIND_GE))
-    {
-      next(parser);
-      AstNode *rhs = parse_bor_expr(parser);
-      AstNonLeafNode *ge = ast_nonleaf_node_new(AST_NODE_KIND_GE);
-      ast_nonleaf_node_append_child(ge, lhs);
-      ast_nonleaf_node_append_child(ge, rhs);
-      lhs = (AstNode *) ge;
-      continue;
-    }
-    break;
   }
   return lhs;
 }
@@ -907,15 +818,95 @@ static inline AstNode *parse_bxor_expr(Parser *parser)
 
 static inline AstNode *parse_band_expr(Parser *parser)
 {
-  AstNode *lhs = parse_shift_expr(parser);
+  AstNode *lhs = parse_eq_expr(parser);
   while (match(parser, TOKEN_KIND_AMP))
   {
     next(parser);
-    AstNode *rhs = parse_shift_expr(parser);
+    AstNode *rhs = parse_eq_expr(parser);
     AstNonLeafNode *band = ast_nonleaf_node_new(AST_NODE_KIND_BAND);
     ast_nonleaf_node_append_child(band, lhs);
     ast_nonleaf_node_append_child(band, rhs);
     lhs = (AstNode *) band;
+  }
+  return lhs;
+}
+
+static inline AstNode *parse_eq_expr(Parser *parser)
+{
+  AstNode *lhs = parse_comp_expr(parser);
+  for (;;)
+  {
+    if (match(parser, TOKEN_KIND_EQEQ))
+    {
+      next(parser);
+      AstNode *rhs = parse_comp_expr(parser);
+      AstNonLeafNode *eq = ast_nonleaf_node_new(AST_NODE_KIND_EQ);
+      ast_nonleaf_node_append_child(eq, lhs);
+      ast_nonleaf_node_append_child(eq, rhs);
+      lhs = (AstNode *) eq;
+      continue;
+    }
+    if (match(parser, TOKEN_KIND_BANGEQ))
+    {
+      next(parser);
+      AstNode *rhs = parse_comp_expr(parser);
+      AstNonLeafNode *ne = ast_nonleaf_node_new(AST_NODE_KIND_NE);
+      ast_nonleaf_node_append_child(ne, lhs);
+      ast_nonleaf_node_append_child(ne, rhs);
+      lhs = (AstNode *) ne;
+      continue;
+    }
+    break;
+  }
+  return lhs;
+}
+
+static inline AstNode *parse_comp_expr(Parser *parser)
+{
+  AstNode *lhs = parse_shift_expr(parser);
+  for (;;)
+  {
+    if (match(parser, TOKEN_KIND_LT))
+    {
+      next(parser);
+      AstNode *rhs = parse_shift_expr(parser);
+      AstNonLeafNode *lt = ast_nonleaf_node_new(AST_NODE_KIND_LT);
+      ast_nonleaf_node_append_child(lt, lhs);
+      ast_nonleaf_node_append_child(lt, rhs);
+      lhs = (AstNode *) lt;
+      continue;
+    }
+    if (match(parser, TOKEN_KIND_LE))
+    {
+      next(parser);
+      AstNode *rhs = parse_shift_expr(parser);
+      AstNonLeafNode *le = ast_nonleaf_node_new(AST_NODE_KIND_LE);
+      ast_nonleaf_node_append_child(le, lhs);
+      ast_nonleaf_node_append_child(le, rhs);
+      lhs = (AstNode *) le;
+      continue;
+    }
+    if (match(parser, TOKEN_KIND_GT))
+    {
+      next(parser);
+      AstNode *rhs = parse_shift_expr(parser);
+      AstNonLeafNode *gt = ast_nonleaf_node_new(AST_NODE_KIND_GT);
+      ast_nonleaf_node_append_child(gt, lhs);
+      ast_nonleaf_node_append_child(gt, rhs);
+      lhs = (AstNode *) gt;
+      continue;
+    }
+    if (match(parser, TOKEN_KIND_GE))
+    {
+      next(parser);
+      AstNode *rhs = parse_shift_expr(parser);
+      AstNonLeafNode *ge = ast_nonleaf_node_new(AST_NODE_KIND_GE);
+      ast_nonleaf_node_append_child(ge, lhs);
+      ast_nonleaf_node_append_child(ge, rhs);
+      lhs = (AstNode *) ge;
+      continue;
+    }
+    break;
   }
   return lhs;
 }
@@ -1066,11 +1057,11 @@ static inline AstNode *parse_unary_expr(Parser *parser)
 
 static inline AstNode *parse_prim_expr(Parser *parser)
 {
-  if (match(parser, TOKEN_KIND_NULL_KW))
+  if (match(parser, TOKEN_KIND_VOID_KW))
   {
     Token token = current(parser);
     next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_NULL, token);
+    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_VOID, token);
   }
   if (match(parser, TOKEN_KIND_FALSE_KW))
   {
@@ -1111,7 +1102,7 @@ static inline AstNode *parse_prim_expr(Parser *parser)
   if (match(parser, TOKEN_KIND_LBRACKET))
     return parse_array_expr(parser);
   if (match(parser, TOKEN_KIND_FN_KW))
-    return parse_func_decl(parser, true, false);
+    return parse_func_decl(parser, true);
   if (match(parser, TOKEN_KIND_NEW_KW))
     return parse_new_expr(parser);
   if (match(parser, TOKEN_KIND_AMP))
