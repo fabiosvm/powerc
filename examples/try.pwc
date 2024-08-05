@@ -1,0 +1,27 @@
+
+// try.pwc
+
+fn Result<Int, String> doSomethingWrong() {
+  return new Result<>("Something went wrong");
+}
+
+fn Result<Int, String> doSomethingRight() {
+  return new Result<>(10);
+}
+
+fn Result<Int, String> callDoSomethingWrong() {
+  let result = doSomethingWrong();
+  let value = try result;
+  println(value); // Unreachable code
+}
+
+fn Result<Int, String> callDoSomethingRight() {
+  let result = doSomethingRight();
+  let value = try result;
+  println(value); // 10
+}
+
+fn Void main() {
+  callDoSomethingWrong();
+  callDoSomethingRight();
+}

@@ -89,7 +89,8 @@ prim_expr       ::= "void" | "false" | "true" | INT | FLOAT | RUNE | STRING
                   | "fn" func_sig block
                   | "new" type call
                   | "&" IDENT subscr*
-                  | "try"? IDENT ( subscr | call )*
+                  | IDENT ( subscr | call )*
+                  | "try" expr
                   | "if" expr "{" expr "}" "else" "{" expr "}"
                   | "(" expr ")"
 
