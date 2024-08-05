@@ -29,13 +29,8 @@ fn T balance(MoneyImpl<T> self) {
   return self.balance;
 }
 
-fn <T: Number> Accountable<T> new_money_accountable() {
-  var MoneyImpl<Float> money = new MoneyImpl<>(0);
-  return money;
-}
-
 fn Void main() {
-  var Accountable<Float> account = new_money_accountable();
+  var Money<Float> money = new MoneyImpl<>(0);
   account.deposit(1000);
   account.withdraw(50);
   println(account.balance()); // 950

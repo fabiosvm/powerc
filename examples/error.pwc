@@ -1,32 +1,37 @@
 
 // error.pwc
 
+struct Option<T> {
+  Bool present;
+  T value;
+}
+
 struct Result<T, E> {
-  ?T ok;
-  ?E error;
+  T ok;
+  Option<E> err;
 }
 
-fn <T> Result<T, Null> ok(T value) {
-  return new Result(value, null);
+fn Void init(inout Result<T, E> self, T ok) {
+  self.ok = ok;
 }
 
-fn <E> Result<Null, E> error(E value) {
-  return new Result(null, value);
+fn Void init(inout Result<T, E> self, E err) {
+  self.err = err;
 }
 
 fn Result<Double, String> divide(Double a, Double b) {
   if (b == 0) {
-    return error("division by zero");
+    return new Result<>("division by zero");
   }
-  return ok(a / b);
+  return new Result<>(a / b);
 }
 
 fn Void ok_test() {
   let a = 10.0;
   let b = 2.0;
   let result = divide(a, b);
-  assert(result.error == null);
   println(result.ok); // 5
+  assert(!result.err.present);
 }
 
 fn Result<Double, String> ok_with_try_test() {
@@ -40,8 +45,8 @@ fn Void error_test() {
   let a = 10.0;
   let b = 0.0;
   let result = divide(a, b);
-  assert(result.error != null);
-  println(result.error); // division by zero
+  assert(result.err.present);
+  println(result.err); // division by zero
 }
 
 fn Result<Double, String> error_with_try_test() {

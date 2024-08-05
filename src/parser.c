@@ -311,9 +311,6 @@ static inline AstNode *parse_type_def(Parser *parser)
 static inline AstNode *parse_func_decl(Parser *parser, bool isAnon, bool isProto)
 {
   next(parser);
-  AstNode *typeParams = NULL;
-  if (!isAnon && !isProto)
-    typeParams = parse_type_params(parser);
   AstNode *retType = parse_type(parser);
   AstNode *ident = NULL;
   if (!isAnon)
@@ -353,7 +350,6 @@ blk:
   AstNonLeafNode *funcDecl;
 end:
   funcDecl = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_DECL);
-  ast_nonleaf_node_append_child(funcDecl, typeParams);
   ast_nonleaf_node_append_child(funcDecl, retType);
   ast_nonleaf_node_append_child(funcDecl, ident);
   ast_nonleaf_node_append_child(funcDecl, (AstNode *) params);

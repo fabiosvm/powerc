@@ -19,7 +19,7 @@ prim_type       ::= "fn" type "(" ( param_type ( "," param_type )* )? ")"
 
 param_type      ::= "inout"? type
 
-func_decl       ::= "fn" type_params? IDENT func_sig block
+func_decl       ::= "fn" IDENT func_sig block
 
 func_sig        ::= type "(" ( param ( "," param )* )? ")"
 
