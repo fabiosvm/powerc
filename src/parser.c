@@ -228,14 +228,6 @@ static inline AstNode *parse_prim_type(Parser *parser)
     return parse_func_type(parser);
   if (match(parser, TOKEN_KIND_IDENT))
     return parse_type_def(parser);
-  if (match(parser, TOKEN_KIND_QMARK))
-  {
-    next(parser);
-    AstNode *type = parse_type(parser);
-    AstNonLeafNode *nullable = ast_nonleaf_node_new(AST_NODE_KIND_NULLABLE);
-    ast_nonleaf_node_append_child(nullable, type);
-    return (AstNode *) nullable;
-  }
   unexpected_token_error(parser);
   return NULL;
 }
@@ -1041,11 +1033,11 @@ static inline AstNode *parse_unary_expr(Parser *parser)
 
 static inline AstNode *parse_prim_expr(Parser *parser)
 {
-  if (match(parser, TOKEN_KIND_NULL_KW))
+  if (match(parser, TOKEN_KIND_VOID_KW))
   {
     Token token = current(parser);
     next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_NULL, token);
+    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_VOID, token);
   }
   if (match(parser, TOKEN_KIND_FALSE_KW))
   {

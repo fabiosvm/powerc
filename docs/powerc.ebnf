@@ -15,7 +15,6 @@ type            ::= prim_type ( "+" prim_type )*
 
 prim_type       ::= "fn" type "(" ( param_type ( "," param_type )* )? ")"
                   | IDENT ( "<" ( type ( "," type )* )? ">" )?
-                  | "?" type
 
 param_type      ::= "inout"? type
 
@@ -85,7 +84,7 @@ mul_expr        ::= unary_expr ( ( "*" | "/" | "%" ) unary_expr )*
 
 unary_expr      ::= ( "!" | "-" | "~" ) unary_expr | prim_expr
 
-prim_expr       ::= "null" | "false" | "true" | INT | FLOAT | RUNE | STRING
+prim_expr       ::= "void" | "false" | "true" | INT | FLOAT | RUNE | STRING
                   | "[" ( expr ( "," expr )* )? "]"
                   | "fn" func_sig block
                   | "new" type call

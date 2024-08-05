@@ -242,7 +242,6 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_RBRACKET:     name = "RBracket";    break;
   case TOKEN_KIND_LBRACE:       name = "LBrace";      break;
   case TOKEN_KIND_RBRACE:       name = "RBrace";      break;
-  case TOKEN_KIND_QMARK:        name = "QMark";       break;
   case TOKEN_KIND_PIPEEQ:       name = "PipeEq";      break;
   case TOKEN_KIND_PIPEPIPE:     name = "PipePipe";    break;
   case TOKEN_KIND_PIPE:         name = "Pipe";        break;
@@ -296,13 +295,13 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_LET_KW:       name = "LetKw";       break;
   case TOKEN_KIND_LOOP_KW:      name = "LoopKw";      break;
   case TOKEN_KIND_NEW_KW:       name = "NewKw";       break;
-  case TOKEN_KIND_NULL_KW:      name = "NullKw";      break;
   case TOKEN_KIND_RETURN_KW:    name = "ReturnKw";    break;
   case TOKEN_KIND_STRUCT_KW:    name = "StructKw";    break;
   case TOKEN_KIND_TRUE_KW:      name = "TrueKw";      break;
   case TOKEN_KIND_TRY_KW:       name = "TryKw";       break;
   case TOKEN_KIND_TYPE_KW:      name = "TypeKw";      break;
   case TOKEN_KIND_VAR_KW:       name = "VarKw";       break;
+  case TOKEN_KIND_VOID_KW:      name = "VoidKw";      break;
   case TOKEN_KIND_WHILE_KW:     name = "WhileKw";     break;
   case TOKEN_KIND_IDENT:        name = "Ident";       break;
   }
@@ -333,7 +332,6 @@ void lexer_next(Lexer *lex)
   if (match_char(lex, ']', TOKEN_KIND_RBRACKET)) return;
   if (match_char(lex, '{', TOKEN_KIND_LBRACE)) return;
   if (match_char(lex, '}', TOKEN_KIND_RBRACE)) return;
-  if (match_char(lex, '?', TOKEN_KIND_QMARK)) return;
   if (match_chars(lex, "|=", TOKEN_KIND_PIPEEQ)) return;
   if (match_chars(lex, "||", TOKEN_KIND_PIPEPIPE)) return;
   if (match_char(lex, '|', TOKEN_KIND_PIPE)) return;
@@ -386,13 +384,13 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "let", TOKEN_KIND_LET_KW)) return;
   if (match_keyword(lex, "loop", TOKEN_KIND_LOOP_KW)) return;
   if (match_keyword(lex, "new", TOKEN_KIND_NEW_KW)) return;
-  if (match_keyword(lex, "null", TOKEN_KIND_NULL_KW)) return;
   if (match_keyword(lex, "return", TOKEN_KIND_RETURN_KW)) return;
   if (match_keyword(lex, "struct", TOKEN_KIND_STRUCT_KW)) return;
   if (match_keyword(lex, "true", TOKEN_KIND_TRUE_KW)) return;
   if (match_keyword(lex, "try", TOKEN_KIND_TRY_KW)) return;
   if (match_keyword(lex, "type", TOKEN_KIND_TYPE_KW)) return;
   if (match_keyword(lex, "var", TOKEN_KIND_VAR_KW)) return;
+  if (match_keyword(lex, "void", TOKEN_KIND_VOID_KW)) return;
   if (match_keyword(lex, "while", TOKEN_KIND_WHILE_KW)) return;
   if (match_ident(lex)) return;
   char c = current_char(lex);
