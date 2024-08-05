@@ -26,13 +26,13 @@ param           ::= param_type IDENT
 
 block           ::= "{" stmt* "}"
 
-struct_decl     ::= "struct" IDENT type_params? "{" ( field ";" )* )? "}"
+struct_decl     ::= "struct" IDENT type_params? "{" field* "}"
 
-field           ::= type IDENT
+field           ::= type IDENT ";"
 
-interface_decl  ::= "interface" IDENT type_params? ( ":" type )? "{" func_proto* "}"
+interface_decl  ::= "interface" IDENT type_params? ( ":" type )? "{" method_proto* "}"
 
-func_proto      ::= "fn" IDENT func_sig ";"
+method_proto    ::= IDENT func_sig ";"
 
 let_decl        ::= "let" IDENT "=" expr ";"
 

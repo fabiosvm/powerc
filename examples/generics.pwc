@@ -2,9 +2,9 @@
 // generics.pwc
 
 interface Accountable<T: Number> {
-  fn Void deposit(inout Self self, T amount);
-  fn Void withdraw(inout Self self, T amount);
-  fn T balance(Self self);
+  Void deposit(inout Self self, T amount);
+  Void withdraw(inout Self self, T amount);
+  T balance(Self self);
 }
 
 type Money<T> = Accountable<T>;

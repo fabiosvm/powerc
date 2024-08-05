@@ -2,15 +2,15 @@
 // interface.pwc
 
 interface I {
-  fn Void f(Self self);
+  Void f(Self self);
 }
 
 interface J {
-  fn Void g(Self self);
+  Void g(Self self);
 }
 
 interface K: I + J {
-  fn Void h(Self self);
+  Void h(Self self);
 }
 
 struct S {}

@@ -72,11 +72,11 @@ fn Double area(Rect self) {
 // Shape
 
 interface Area {
-  fn Double area(Self self);
+  Double area(Self self);
 }
 
 interface Perimeter {
-  fn Double perimeter(Self self);
+  Double perimeter(Self self);
 }
 
 type Shape = Area + Perimeter;
