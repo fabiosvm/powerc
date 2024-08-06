@@ -1,7 +1,7 @@
 
 // while.pwc
 
-fn Void main() {
+fn Int main() {
   var Int a = 0;
   while a < 5 {
     a += 1;

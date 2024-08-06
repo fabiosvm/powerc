@@ -29,7 +29,7 @@ fn T balance(MoneyImpl<T> self) {
   return self.balance;
 }
 
-fn Void main() {
+fn Int main() {
   var Money<Float> money = new MoneyImpl<>(0);
   account.deposit(1000);
   account.withdraw(50);

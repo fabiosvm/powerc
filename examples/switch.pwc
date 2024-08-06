@@ -1,0 +1,14 @@
+
+// switch.pwc
+
+fn Int main() {
+  const a = 1;
+  switch a {
+  case 1:
+    println("a is 1");
+  case 2:
+    println("a is 2");
+  default:
+    println("a is not 1 or 2");
+  }
+}

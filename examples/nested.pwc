@@ -1,7 +1,7 @@
 
 // nested.pwc
 
-fn Void main() {
+fn Int main() {
   fn Void f() {
     fn Void g() {
       fn Void h() {

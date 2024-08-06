@@ -52,6 +52,7 @@ static inline AstNode *parse_const_decl(Parser *parser);
 static inline AstNode *parse_var_decl(Parser *parser);
 static inline AstNode *parse_stmt(Parser *parser);
 static inline AstNode *parse_if_stmt(Parser *parser);
+static inline AstNode *parse_switch_stmt(Parser *parser);
 static inline AstNode *parse_while_stmt(Parser *parser);
 static inline AstNode *parse_do_while_stmt(Parser *parser);
 static inline AstNode *parse_for_stmt(Parser *parser);
@@ -540,6 +541,8 @@ static inline AstNode *parse_stmt(Parser *parser)
     return parse_block(parser);
   if (match(parser, TOKEN_KIND_IF_KW))
     return parse_if_stmt(parser);
+  if (match(parser, TOKEN_KIND_SWITCH_KW))
+    return parse_switch_stmt(parser);
   if (match(parser, TOKEN_KIND_WHILE_KW))
     return parse_while_stmt(parser);
   if (match(parser, TOKEN_KIND_DO_KW))
@@ -577,6 +580,46 @@ static inline AstNode *parse_if_stmt(Parser *parser)
   ast_nonleaf_node_append_child(ifStmt, thenBlock);
   ast_nonleaf_node_append_child(ifStmt, elseBlock);
   return (AstNode *) ifStmt;
+}
+
+static inline AstNode *parse_switch_stmt(Parser *parser)
+{
+  next(parser);
+  AstNode *expr = parse_expr(parser);
+  consume(parser, TOKEN_KIND_LBRACE);
+  AstNonLeafNode *switchStmt = ast_nonleaf_node_new(AST_NODE_KIND_SWITCH);
+  ast_nonleaf_node_append_child(switchStmt, expr);
+  while (match(parser, TOKEN_KIND_CASE_KW))
+  {
+    next(parser);
+    expr = parse_expr(parser);
+    consume(parser, TOKEN_KIND_COLON);
+    AstNonLeafNode *switchCase = ast_nonleaf_node_new(AST_NODE_KIND_CASE);
+    ast_nonleaf_node_append_child(switchCase, expr);
+    while (!match(parser, TOKEN_KIND_CASE_KW)
+        && !match(parser, TOKEN_KIND_DEFAULT_KW)
+        && !match(parser, TOKEN_KIND_RBRACE))
+    {
+      AstNode *stmt = parse_stmt(parser);
+      ast_nonleaf_node_append_child(switchCase, stmt);
+    }
+    ast_nonleaf_node_append_child(switchStmt, (AstNode *) switchCase);
+  }
+  AstNonLeafNode *switchDefault = NULL;
+  if (match(parser, TOKEN_KIND_DEFAULT_KW))
+  {
+    next(parser);
+    consume(parser, TOKEN_KIND_COLON);
+    switchDefault = ast_nonleaf_node_new(AST_NODE_KIND_DEFAULT);
+    while (!match(parser, TOKEN_KIND_RBRACE))
+    {
+      AstNode *stmt = parse_stmt(parser);
+      ast_nonleaf_node_append_child(switchDefault, stmt);
+    }
+  }
+  ast_nonleaf_node_append_child(switchStmt, (AstNode *) switchDefault);
+  consume(parser, TOKEN_KIND_RBRACE);
+  return (AstNode *) switchStmt;
 }
 
 static inline AstNode *parse_while_stmt(Parser *parser)

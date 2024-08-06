@@ -1,7 +1,7 @@
 
 // block.pwc
 
-fn Void main() {
+fn Int main() {
   const a = 1;
   {
     const a = 2;

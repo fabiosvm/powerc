@@ -1,7 +1,7 @@
 
 // assign.pwc
 
-fn Void main() {
+fn Int main() {
   var Int a = 1;
   a = 2;
   a |= 1;

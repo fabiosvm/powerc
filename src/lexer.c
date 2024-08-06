@@ -281,8 +281,10 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_STRING:       name = "String";      break;
   case TOKEN_KIND_AS_KW:        name = "AsKw";        break;
   case TOKEN_KIND_BREAK_KW:     name = "BreakKw";     break;
+  case TOKEN_KIND_CASE_KW:      name = "CaseKw";      break;
   case TOKEN_KIND_CONST_KW:     name = "ConstKw";     break;
   case TOKEN_KIND_CONTINUE_KW:  name = "ContinueKw";  break;
+  case TOKEN_KIND_DEFAULT_KW:   name = "DefaultKw";   break;
   case TOKEN_KIND_DO_KW:        name = "DoKw";        break;
   case TOKEN_KIND_ELSE_KW:      name = "ElseKw";      break;
   case TOKEN_KIND_FALSE_KW:     name = "FalseKw";     break;
@@ -296,6 +298,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_NEW_KW:       name = "NewKw";       break;
   case TOKEN_KIND_RETURN_KW:    name = "ReturnKw";    break;
   case TOKEN_KIND_STRUCT_KW:    name = "StructKw";    break;
+  case TOKEN_KIND_SWITCH_KW:    name = "SwitchKw";    break;
   case TOKEN_KIND_TRUE_KW:      name = "TrueKw";      break;
   case TOKEN_KIND_TRY_KW:       name = "TryKw";       break;
   case TOKEN_KIND_TYPE_KW:      name = "TypeKw";      break;
@@ -369,8 +372,10 @@ void lexer_next(Lexer *lex)
   if (match_string(lex)) return;
   if (match_keyword(lex, "as", TOKEN_KIND_AS_KW)) return;
   if (match_keyword(lex, "break", TOKEN_KIND_BREAK_KW)) return;
+  if (match_keyword(lex, "case", TOKEN_KIND_CASE_KW)) return;
   if (match_keyword(lex, "const", TOKEN_KIND_CONST_KW)) return;
   if (match_keyword(lex, "continue", TOKEN_KIND_CONTINUE_KW)) return;
+  if (match_keyword(lex, "default", TOKEN_KIND_DEFAULT_KW)) return;
   if (match_keyword(lex, "do", TOKEN_KIND_DO_KW)) return;
   if (match_keyword(lex, "else", TOKEN_KIND_ELSE_KW)) return;
   if (match_keyword(lex, "false", TOKEN_KIND_FALSE_KW)) return;
@@ -384,6 +389,7 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "new", TOKEN_KIND_NEW_KW)) return;
   if (match_keyword(lex, "return", TOKEN_KIND_RETURN_KW)) return;
   if (match_keyword(lex, "struct", TOKEN_KIND_STRUCT_KW)) return;
+  if (match_keyword(lex, "switch", TOKEN_KIND_SWITCH_KW)) return;
   if (match_keyword(lex, "true", TOKEN_KIND_TRUE_KW)) return;
   if (match_keyword(lex, "try", TOKEN_KIND_TRY_KW)) return;
   if (match_keyword(lex, "type", TOKEN_KIND_TYPE_KW)) return;

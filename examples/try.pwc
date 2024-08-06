@@ -21,7 +21,7 @@ fn Result<Int, String> callDoSomethingRight() {
   println(value); // 10
 }
 
-fn Void main() {
+fn Int main() {
   callDoSomethingWrong();
   callDoSomethingRight();
 }

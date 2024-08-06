@@ -56,7 +56,7 @@ fn Result<Double, String> error_with_try_test() {
   println(result);
 }
 
-fn Void main() {
+fn Int main() {
   ok_test();
   ok_with_try_test();
   error_test();

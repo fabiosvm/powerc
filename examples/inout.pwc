@@ -5,7 +5,7 @@ fn Void mutate(inout Int x) {
   x = 2;
 }
 
-fn Void main() {
+fn Int main() {
   var Int a = 1;
   var Array<Int> b = [1, 2, 3];
   mutate(&a);

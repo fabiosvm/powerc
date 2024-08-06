@@ -3,6 +3,6 @@
 
 const PI = 3.14;
 
-fn Void main() {
+fn Int main() {
   println(PI);
 }

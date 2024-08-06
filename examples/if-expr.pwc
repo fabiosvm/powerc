@@ -1,7 +1,7 @@
 
 // if-expr.pwc
 
-fn Void main() {
+fn Int main() {
   const a = true;
   const b = if a { 1 } else { 2 };
   println(b); // 1

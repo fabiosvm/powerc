@@ -4,7 +4,7 @@
 import "io";
 import "./logger" as log;
 
-fn Void main() {
+fn Int main() {
   const msg = "Hello, world!";
   log.info(msg);
   println(msg);

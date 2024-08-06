@@ -1,7 +1,7 @@
 
 // if-else.pwc
 
-fn Void main() {
+fn Int main() {
   var Bool a = true;
   if a {
     a = false;

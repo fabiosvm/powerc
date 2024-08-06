@@ -1,7 +1,7 @@
 
 // range.pwc
 
-fn Void main() {
+fn Int main() {
   var Range<Long> a;
   a = 0..5;
   print(a); // 0..5

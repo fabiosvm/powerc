@@ -1,7 +1,7 @@
 
 // call.pwc
 
-fn Void main() {
+fn Int main() {
   const f = fn Array<fn Void ()> () {
     return [
       fn Void () {

@@ -57,6 +57,9 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_DIV_ASSIGN:
   case AST_NODE_KIND_MOD_ASSIGN:
   case AST_NODE_KIND_IF:
+  case AST_NODE_KIND_SWITCH:
+  case AST_NODE_KIND_CASE:
+  case AST_NODE_KIND_DEFAULT:
   case AST_NODE_KIND_WHILE:
   case AST_NODE_KIND_DO_WHILE:
   case AST_NODE_KIND_FOR:
@@ -155,6 +158,9 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_DIV_ASSIGN:     name = "DivAssign";     break;
   case AST_NODE_KIND_MOD_ASSIGN:     name = "ModAssign";     break;
   case AST_NODE_KIND_IF:             name = "If";            break;
+  case AST_NODE_KIND_SWITCH:         name = "Switch";        break;
+  case AST_NODE_KIND_CASE:           name = "Case";          break;
+  case AST_NODE_KIND_DEFAULT:        name = "Default";       break;
   case AST_NODE_KIND_WHILE:          name = "While";         break;
   case AST_NODE_KIND_DO_WHILE:       name = "DoWhile";       break;
   case AST_NODE_KIND_FOR:            name = "For";           break;

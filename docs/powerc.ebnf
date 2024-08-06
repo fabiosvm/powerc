@@ -49,6 +49,7 @@ stmt            ::= type_decl
                   | var_decl
                   | block
                   | "if" expr block ( "else" block )?
+                  | "switch" expr "{" case* default? "}"
                   | "while" expr block
                   | "do" block "while" expr ";"
                   | "for" IDENT "in" expr block
@@ -58,6 +59,10 @@ stmt            ::= type_decl
                   | expr ";"
 
 var_decl        ::= "var" type IDENT ( "=" expr )? ";"
+
+case            ::= "case" expr ":" stmt*
+
+default         ::= "default" ":" stmt*
 
 expr            ::= or_expr ( assign_op expr )?
 

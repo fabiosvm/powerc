@@ -44,7 +44,7 @@ static inline FILE *open_file(char *file)
 #else
   fp = fopen(file, "r");
 #endif
-  if (!file)
+  if (!fp)
   {
     fprintf(stderr, "\nERROR: cannot open file %s\n", file);
     exit(EXIT_FAILURE);

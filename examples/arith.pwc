@@ -14,5 +14,4 @@ fn Int main() {
   var Int b;
   b = add_one(square(a));
   println(b); // 10
-  return 0;
 }

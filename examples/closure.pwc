@@ -1,7 +1,7 @@
 
 // closure.pwc
 
-fn Void main() {
+fn Int main() {
   const a = "Hello";
   var fn Void () f;
   f = fn Void () {

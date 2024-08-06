@@ -8,6 +8,6 @@ fn Int fib(Int n) {
   return fib(n - 1) + fib(n - 2);
 }
 
-fn Void main() {
+fn Int main() {
   println(fib(10)); // 55
 }

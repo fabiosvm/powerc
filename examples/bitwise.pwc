@@ -1,7 +1,7 @@
 
 // bitwise.pwc
 
-fn Void main() {
+fn Int main() {
   const a = 0;
   const b = 1;
   println(a | b); // 1

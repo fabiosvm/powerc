@@ -27,7 +27,7 @@ fn Void h(S self) {
   println("h() called");
 }
 
-fn Void main() {
+fn Int main() {
   var K k;
   k = new S();
   k.f(); // f() called

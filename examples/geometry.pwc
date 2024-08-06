@@ -81,7 +81,7 @@ interface Perimeter {
 
 type Shape = Area + Perimeter;
 
-fn Void main() {
+fn Int main() {
   // Points
   const p1 = new Point(-3, -4);
   const p2 = new Point(3, 4);
