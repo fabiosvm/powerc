@@ -293,7 +293,6 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_IN_KW:        name = "InKw";        break;
   case TOKEN_KIND_INOUT_KW:     name = "InoutKw";     break;
   case TOKEN_KIND_INTERFACE_KW: name = "InterfaceKw"; break;
-  case TOKEN_KIND_LOOP_KW:      name = "LoopKw";      break;
   case TOKEN_KIND_NEW_KW:       name = "NewKw";       break;
   case TOKEN_KIND_RETURN_KW:    name = "ReturnKw";    break;
   case TOKEN_KIND_STRUCT_KW:    name = "StructKw";    break;
@@ -382,7 +381,6 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "in", TOKEN_KIND_IN_KW)) return;
   if (match_keyword(lex, "inout", TOKEN_KIND_INOUT_KW)) return;
   if (match_keyword(lex, "interface", TOKEN_KIND_INTERFACE_KW)) return;
-  if (match_keyword(lex, "loop", TOKEN_KIND_LOOP_KW)) return;
   if (match_keyword(lex, "new", TOKEN_KIND_NEW_KW)) return;
   if (match_keyword(lex, "return", TOKEN_KIND_RETURN_KW)) return;
   if (match_keyword(lex, "struct", TOKEN_KIND_STRUCT_KW)) return;

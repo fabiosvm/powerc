@@ -49,7 +49,6 @@ stmt            ::= type_decl
                   | var_decl
                   | block
                   | "if" expr block ( "else" block )?
-                  | "loop" block
                   | "while" expr block
                   | "do" block "while" expr ";"
                   | "for" IDENT "in" expr block

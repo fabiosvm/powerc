@@ -52,7 +52,6 @@ static inline AstNode *parse_const_decl(Parser *parser);
 static inline AstNode *parse_var_decl(Parser *parser);
 static inline AstNode *parse_stmt(Parser *parser);
 static inline AstNode *parse_if_stmt(Parser *parser);
-static inline AstNode *parse_loop_stmt(Parser *parser);
 static inline AstNode *parse_while_stmt(Parser *parser);
 static inline AstNode *parse_do_while_stmt(Parser *parser);
 static inline AstNode *parse_for_stmt(Parser *parser);
@@ -541,8 +540,6 @@ static inline AstNode *parse_stmt(Parser *parser)
     return parse_block(parser);
   if (match(parser, TOKEN_KIND_IF_KW))
     return parse_if_stmt(parser);
-  if (match(parser, TOKEN_KIND_LOOP_KW))
-    return parse_loop_stmt(parser);
   if (match(parser, TOKEN_KIND_WHILE_KW))
     return parse_while_stmt(parser);
   if (match(parser, TOKEN_KIND_DO_KW))
@@ -580,17 +577,6 @@ static inline AstNode *parse_if_stmt(Parser *parser)
   ast_nonleaf_node_append_child(ifStmt, thenBlock);
   ast_nonleaf_node_append_child(ifStmt, elseBlock);
   return (AstNode *) ifStmt;
-}
-
-static inline AstNode *parse_loop_stmt(Parser *parser)
-{
-  next(parser);
-  if (!match(parser, TOKEN_KIND_LBRACE))
-    unexpected_token_error(parser);
-  AstNode *block = parse_block(parser);
-  AstNonLeafNode *loopStmt = ast_nonleaf_node_new(AST_NODE_KIND_LOOP);
-  ast_nonleaf_node_append_child(loopStmt, block);
-  return (AstNode *) loopStmt;
 }
 
 static inline AstNode *parse_while_stmt(Parser *parser)
