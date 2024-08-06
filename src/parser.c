@@ -1070,11 +1070,11 @@ static inline AstNode *parse_prim_expr(Parser *parser)
     next(parser);
     return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_FLOAT, token);
   }
-  if (match(parser, TOKEN_KIND_RUNE))
+  if (match(parser, TOKEN_KIND_CHAR))
   {
     Token token = current(parser);
     next(parser);
-    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_RUNE, token);
+    return (AstNode *) ast_leaf_node_new(AST_NODE_KIND_CHAR, token);
   }
   if (match(parser, TOKEN_KIND_STRING))
   {

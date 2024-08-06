@@ -108,7 +108,7 @@ static inline void node_print(AstNode *node, int level)
     break;
   case AST_NODE_KIND_INT:
   case AST_NODE_KIND_FLOAT:
-  case AST_NODE_KIND_RUNE:
+  case AST_NODE_KIND_CHAR:
   case AST_NODE_KIND_STRING:
   case AST_NODE_KIND_IDENT:
     {
@@ -191,7 +191,7 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_TRUE:           name = "True";          break;
   case AST_NODE_KIND_INT:            name = "Int";           break;
   case AST_NODE_KIND_FLOAT:          name = "Float";         break;
-  case AST_NODE_KIND_RUNE:           name = "Rune";          break;
+  case AST_NODE_KIND_CHAR:           name = "Char";          break;
   case AST_NODE_KIND_STRING:         name = "String";        break;
   case AST_NODE_KIND_ARRAY:          name = "Array";         break;
   case AST_NODE_KIND_ELEMENT:        name = "Element";       break;

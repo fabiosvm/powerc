@@ -17,18 +17,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define char_at(l, i)   ((l)->curr[(i)])
-#define current_char(l) char_at(l, 0)
+#define char_at(l, i) ((l)->curr[(i)])
+#define current(l)    char_at(l, 0)
 
 static inline bool skip_space(Lexer *lex);
 static inline bool skip_comment(Lexer *lex);
-static inline void next_char(Lexer *lex);
+static inline void next(Lexer *lex);
 static inline void next_chars(Lexer *lex, int length);
-static inline bool match_char(Lexer *lex, char c, TokenKind kind);
+static inline bool match(Lexer *lex, char c, TokenKind kind);
 static inline bool match_chars(Lexer *lex, const char *chars, TokenKind kind);
 static inline bool match_keyword(Lexer *lex, const char *kw, TokenKind kind);
 static inline bool match_number(Lexer *lex);
-static inline bool match_rune(Lexer *lex);
+static inline bool match_char(Lexer *lex);
 static inline bool match_string(Lexer *lex);
 static inline bool match_ident(Lexer *lex);
 static inline Token token(Lexer *lex, TokenKind kind, int length, char *chars);
@@ -36,37 +36,37 @@ static inline void lexical_error(Lexer *lex, const char *fmt, ...);
 
 static inline bool skip_space(Lexer *lex)
 {
-  if (!isspace(current_char(lex)))
+  if (!isspace(current(lex)))
     return false;
   do
-    next_char(lex);
-  while (isspace(current_char(lex)));
+    next(lex);
+  while (isspace(current(lex)));
   return true;
 }
 
 static inline bool skip_comment(Lexer *lex)
 {
-  if (current_char(lex) != '/')
+  if (current(lex) != '/')
     return false;
   if (char_at(lex, 1) == '/')
   {
     next_chars(lex, 2);
-    while (current_char(lex) != '\n')
-      next_char(lex);
+    while (current(lex) != '\n')
+      next(lex);
     return true;
   }
   if (char_at(lex, 1) != '*')
     return false;
   next_chars(lex, 2);
-  while (current_char(lex) != '*' || char_at(lex, 1) != '/')
-    next_char(lex);
+  while (current(lex) != '*' || char_at(lex, 1) != '/')
+    next(lex);
   next_chars(lex, 2);
   return true;
 }
 
-static inline void next_char(Lexer *lex)
+static inline void next(Lexer *lex)
 {
-  if (current_char(lex) == '\n')
+  if (current(lex) == '\n')
   {
     ++lex->ln;
     lex->col = 1;
@@ -80,15 +80,15 @@ static inline void next_char(Lexer *lex)
 static inline void next_chars(Lexer *lex, int length)
 {
   for (int i = 0; i < length; ++i)
-    next_char(lex);
+    next(lex);
 }
 
-static inline bool match_char(Lexer *lex, char c, TokenKind kind)
+static inline bool match(Lexer *lex, char c, TokenKind kind)
 {
-  if (current_char(lex) != c)
+  if (current(lex) != c)
     return false;
   lex->token = token(lex, kind, 1, lex->curr);
-  next_char(lex);
+  next(lex);
   return true;
 }
 
@@ -156,24 +156,24 @@ end:
   return true;
 }
 
-static inline bool match_rune(Lexer *lex)
+static inline bool match_char(Lexer *lex)
 {
-  if (current_char(lex) != '\'')
+  if (current(lex) != '\'')
     return false;
-  if (current_char(lex) == '\'')
+  if (current(lex) == '\'')
     return false;
   if (char_at(lex, 1) == '\0')
-    lexical_error(lex, "unclosed rune literal");
+    lexical_error(lex, "unclosed char literal");
   if (char_at(lex, 2) != '\'')
     return false;
-  lex->token = token(lex, TOKEN_KIND_RUNE, 1, &lex->curr[1]);
+  lex->token = token(lex, TOKEN_KIND_CHAR, 1, &lex->curr[1]);
   next_chars(lex, 3);
   return true;
 }
 
 static inline bool match_string(Lexer *lex)
 {
-  if (current_char(lex) != '\"')
+  if (current(lex) != '\"')
     return false;
   int length = 1;
   for (;;)
@@ -194,7 +194,7 @@ static inline bool match_string(Lexer *lex)
 
 static inline bool match_ident(Lexer *lex)
 {
-  if (current_char(lex) != '_' && !isalpha(current_char(lex)))
+  if (current(lex) != '_' && !isalpha(current(lex)))
     return false;
   int length = 1;
   while (char_at(lex, length) == '_' || isalnum(char_at(lex, length)))
@@ -277,7 +277,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_PERCENT:      name = "Percent";     break;
   case TOKEN_KIND_INT:          name = "Int";         break;
   case TOKEN_KIND_FLOAT:        name = "Float";       break;
-  case TOKEN_KIND_RUNE:         name = "Rune";        break;
+  case TOKEN_KIND_CHAR:         name = "Char";        break;
   case TOKEN_KIND_STRING:       name = "String";      break;
   case TOKEN_KIND_AS_KW:        name = "AsKw";        break;
   case TOKEN_KIND_BREAK_KW:     name = "BreakKw";     break;
@@ -321,51 +321,51 @@ void lexer_init(Lexer *lex, char *file, char *source)
 void lexer_next(Lexer *lex)
 {
   while (skip_space(lex) || skip_comment(lex));
-  if (match_char(lex, 0, TOKEN_KIND_EOF)) return;
-  if (match_char(lex, ',', TOKEN_KIND_COMMA)) return;
-  if (match_char(lex, ';', TOKEN_KIND_SEMICOLON)) return;
-  if (match_char(lex, ':', TOKEN_KIND_COLON)) return;
-  if (match_char(lex, '(', TOKEN_KIND_LPAREN)) return;
-  if (match_char(lex, ')', TOKEN_KIND_RPAREN)) return;
-  if (match_char(lex, '[', TOKEN_KIND_LBRACKET)) return;
-  if (match_char(lex, ']', TOKEN_KIND_RBRACKET)) return;
-  if (match_char(lex, '{', TOKEN_KIND_LBRACE)) return;
-  if (match_char(lex, '}', TOKEN_KIND_RBRACE)) return;
+  if (match(lex, 0, TOKEN_KIND_EOF)) return;
+  if (match(lex, ',', TOKEN_KIND_COMMA)) return;
+  if (match(lex, ';', TOKEN_KIND_SEMICOLON)) return;
+  if (match(lex, ':', TOKEN_KIND_COLON)) return;
+  if (match(lex, '(', TOKEN_KIND_LPAREN)) return;
+  if (match(lex, ')', TOKEN_KIND_RPAREN)) return;
+  if (match(lex, '[', TOKEN_KIND_LBRACKET)) return;
+  if (match(lex, ']', TOKEN_KIND_RBRACKET)) return;
+  if (match(lex, '{', TOKEN_KIND_LBRACE)) return;
+  if (match(lex, '}', TOKEN_KIND_RBRACE)) return;
   if (match_chars(lex, "|=", TOKEN_KIND_PIPEEQ)) return;
   if (match_chars(lex, "||", TOKEN_KIND_PIPEPIPE)) return;
-  if (match_char(lex, '|', TOKEN_KIND_PIPE)) return;
+  if (match(lex, '|', TOKEN_KIND_PIPE)) return;
   if (match_chars(lex, "&=", TOKEN_KIND_AMPEQ)) return;
   if (match_chars(lex, "&&", TOKEN_KIND_AMPAMP)) return;
-  if (match_char(lex, '&', TOKEN_KIND_AMP)) return;
+  if (match(lex, '&', TOKEN_KIND_AMP)) return;
   if (match_chars(lex, "^=", TOKEN_KIND_CARETEQ)) return;
-  if (match_char(lex, '^', TOKEN_KIND_CARET)) return;
+  if (match(lex, '^', TOKEN_KIND_CARET)) return;
   if (match_chars(lex, "==", TOKEN_KIND_EQEQ)) return;
-  if (match_char(lex, '=', TOKEN_KIND_EQ)) return;
+  if (match(lex, '=', TOKEN_KIND_EQ)) return;
   if (match_chars(lex, "!=", TOKEN_KIND_BANGEQ)) return;
-  if (match_char(lex, '!', TOKEN_KIND_BANG)) return;
-  if (match_char(lex, '~', TOKEN_KIND_TILDE)) return;
+  if (match(lex, '!', TOKEN_KIND_BANG)) return;
+  if (match(lex, '~', TOKEN_KIND_TILDE)) return;
   if (match_chars(lex, "<=", TOKEN_KIND_LE)) return;
   if (match_chars(lex, "<<=", TOKEN_KIND_LTLTEQ)) return;
   if (match_chars(lex, "<<", TOKEN_KIND_LTLT)) return;
-  if (match_char(lex, '<', TOKEN_KIND_LT)) return;
+  if (match(lex, '<', TOKEN_KIND_LT)) return;
   if (match_chars(lex, ">=", TOKEN_KIND_GE)) return;
   if (match_chars(lex, ">>=", TOKEN_KIND_GTGTEQ)) return;
   if (match_chars(lex, ">>", TOKEN_KIND_GTGT)) return;
-  if (match_char(lex, '>', TOKEN_KIND_GT)) return;
+  if (match(lex, '>', TOKEN_KIND_GT)) return;
   if (match_chars(lex, "..", TOKEN_KIND_DOTDOT)) return;
-  if (match_char(lex, '.', TOKEN_KIND_DOT)) return;
+  if (match(lex, '.', TOKEN_KIND_DOT)) return;
   if (match_chars(lex, "+=", TOKEN_KIND_PLUSEQ)) return;
-  if (match_char(lex, '+', TOKEN_KIND_PLUS)) return;
+  if (match(lex, '+', TOKEN_KIND_PLUS)) return;
   if (match_chars(lex, "-=", TOKEN_KIND_MINUSEQ)) return;
-  if (match_char(lex, '-', TOKEN_KIND_MINUS)) return;
+  if (match(lex, '-', TOKEN_KIND_MINUS)) return;
   if (match_chars(lex, "*=", TOKEN_KIND_STAREQ)) return;
-  if (match_char(lex, '*', TOKEN_KIND_STAR)) return;
+  if (match(lex, '*', TOKEN_KIND_STAR)) return;
   if (match_chars(lex, "/=", TOKEN_KIND_SLASHEQ)) return;
-  if (match_char(lex, '/', TOKEN_KIND_SLASH)) return;
+  if (match(lex, '/', TOKEN_KIND_SLASH)) return;
   if (match_chars(lex, "%=", TOKEN_KIND_PERCENTEQ)) return;
-  if (match_char(lex, '%', TOKEN_KIND_PERCENT)) return;
+  if (match(lex, '%', TOKEN_KIND_PERCENT)) return;
   if (match_number(lex)) return;
-  if (match_rune(lex)) return;
+  if (match_char(lex)) return;
   if (match_string(lex)) return;
   if (match_keyword(lex, "as", TOKEN_KIND_AS_KW)) return;
   if (match_keyword(lex, "break", TOKEN_KIND_BREAK_KW)) return;
@@ -391,7 +391,7 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "void", TOKEN_KIND_VOID_KW)) return;
   if (match_keyword(lex, "while", TOKEN_KIND_WHILE_KW)) return;
   if (match_ident(lex)) return;
-  char c = current_char(lex);
+  char c = current(lex);
   c = isprint(c) ? c : '?';
   lexical_error(lex, "unexpected character '%c' found", c);
 }
