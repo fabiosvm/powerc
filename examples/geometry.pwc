@@ -14,8 +14,8 @@ fn Void init(Point self, Double x, Double y) {
 }
 
 fn Double distance(Point self, Point other) {
-  let dx = abs(self.x - other.x);
-  let dy = abs(self.y - other.y);
+  const dx = abs(self.x - other.x);
+  const dy = abs(self.y - other.y);
   return sqrt(pow(dx, 2) + pow(dy, 2));
 }
 
@@ -83,25 +83,25 @@ type Shape = Area + Perimeter;
 
 fn Void main() {
   // Points
-  let p1 = new Point(-3, -4);
-  let p2 = new Point(3, 4);
-  let d = p1.distance(p2);
+  const p1 = new Point(-3, -4);
+  const p2 = new Point(3, 4);
+  const d = p1.distance(p2);
   println(d); // 10
 
   // Circles
-  let c1 = new Circle(3);
-  let c2 = new Circle(new Point(1, 2), 3);
-  let perim = c1.perimeter();
+  const c1 = new Circle(3);
+  const c2 = new Circle(new Point(1, 2), 3);
+  const perim = c1.perimeter();
   println(perim); // 18.849556
-  let area = c2.area();
+  const area = c2.area();
   println(area); // 28.274334
 
   // Rects
-  let r1 = new Rect(3, 4);
-  let r2 = new Rect(new Point(1, 2), 3, 4);
-  let perim = r1.perimeter();
+  const r1 = new Rect(3, 4);
+  const r2 = new Rect(new Point(1, 2), 3, 4);
+  const perim = r1.perimeter();
   println(perim); // 14
-  let area = r2.area();
+  const area = r2.area();
   println(area); // 12
 
   // Shape

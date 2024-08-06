@@ -1,7 +1,7 @@
 
 // global.pwc
 
-let PI = 3.14;
+const PI = 3.14;
 
 fn Void main() {
   println(PI);

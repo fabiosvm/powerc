@@ -281,6 +281,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_STRING:       name = "String";      break;
   case TOKEN_KIND_AS_KW:        name = "AsKw";        break;
   case TOKEN_KIND_BREAK_KW:     name = "BreakKw";     break;
+  case TOKEN_KIND_CONST_KW:     name = "ConstKw";     break;
   case TOKEN_KIND_CONTINUE_KW:  name = "ContinueKw";  break;
   case TOKEN_KIND_DO_KW:        name = "DoKw";        break;
   case TOKEN_KIND_ELSE_KW:      name = "ElseKw";      break;
@@ -292,7 +293,6 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_IN_KW:        name = "InKw";        break;
   case TOKEN_KIND_INOUT_KW:     name = "InoutKw";     break;
   case TOKEN_KIND_INTERFACE_KW: name = "InterfaceKw"; break;
-  case TOKEN_KIND_LET_KW:       name = "LetKw";       break;
   case TOKEN_KIND_LOOP_KW:      name = "LoopKw";      break;
   case TOKEN_KIND_NEW_KW:       name = "NewKw";       break;
   case TOKEN_KIND_RETURN_KW:    name = "ReturnKw";    break;
@@ -370,6 +370,7 @@ void lexer_next(Lexer *lex)
   if (match_string(lex)) return;
   if (match_keyword(lex, "as", TOKEN_KIND_AS_KW)) return;
   if (match_keyword(lex, "break", TOKEN_KIND_BREAK_KW)) return;
+  if (match_keyword(lex, "const", TOKEN_KIND_CONST_KW)) return;
   if (match_keyword(lex, "continue", TOKEN_KIND_CONTINUE_KW)) return;
   if (match_keyword(lex, "do", TOKEN_KIND_DO_KW)) return;
   if (match_keyword(lex, "else", TOKEN_KIND_ELSE_KW)) return;
@@ -381,7 +382,6 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "in", TOKEN_KIND_IN_KW)) return;
   if (match_keyword(lex, "inout", TOKEN_KIND_INOUT_KW)) return;
   if (match_keyword(lex, "interface", TOKEN_KIND_INTERFACE_KW)) return;
-  if (match_keyword(lex, "let", TOKEN_KIND_LET_KW)) return;
   if (match_keyword(lex, "loop", TOKEN_KIND_LOOP_KW)) return;
   if (match_keyword(lex, "new", TOKEN_KIND_NEW_KW)) return;
   if (match_keyword(lex, "return", TOKEN_KIND_RETURN_KW)) return;

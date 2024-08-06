@@ -10,14 +10,14 @@ fn Result<Int, String> doSomethingRight() {
 }
 
 fn Result<Int, String> callDoSomethingWrong() {
-  let result = doSomethingWrong();
-  let value = try result;
+  const result = doSomethingWrong();
+  const value = try result;
   println(value); // Unreachable code
 }
 
 fn Result<Int, String> callDoSomethingRight() {
-  let result = doSomethingRight();
-  let value = try result;
+  const result = doSomethingRight();
+  const value = try result;
   println(value); // 10
 }
 

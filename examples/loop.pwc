@@ -2,8 +2,8 @@
 // loop.pwc
 
 fn Void main() {
-  let min = 5;
-  let max = 10;
+  const min = 5;
+  const max = 10;
   var Int i = 0;
   loop {
     i += 1;

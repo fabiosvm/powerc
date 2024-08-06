@@ -2,7 +2,7 @@
 // call.pwc
 
 fn Void main() {
-  let f = fn Array<fn Void ()> () {
+  const f = fn Array<fn Void ()> () {
     return [
       fn Void () {
         println("Hello");

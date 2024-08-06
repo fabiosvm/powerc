@@ -1,7 +1,12 @@
 
 module          ::= decl* EOF
 
-decl            ::= import_decl | type_decl | func_decl | struct_decl | interface_decl | let_decl
+decl            ::= import_decl
+                  | type_decl
+                  | func_decl
+                  | struct_decl
+                  | interface_decl
+                  | const_decl
 
 import_decl     ::= "import" STRING ( "as" IDENT )? ";"
 
@@ -34,13 +39,13 @@ interface_decl  ::= "interface" IDENT type_params? ( ":" type )? "{" method_prot
 
 method_proto    ::= IDENT func_sig ";"
 
-let_decl        ::= "let" IDENT "=" expr ";"
+const_decl      ::= "const" IDENT "=" expr ";"
 
 stmt            ::= type_decl
                   | func_decl
                   | struct_decl
                   | interface_decl
-                  | let_decl
+                  | const_decl
                   | var_decl
                   | block
                   | "if" expr block ( "else" block )?

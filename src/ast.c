@@ -40,7 +40,7 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_STRUCT_DECL:
   case AST_NODE_KIND_INTERFACE_DECL:
   case AST_NODE_KIND_VAR_DECL:
-  case AST_NODE_KIND_LET_DECL:
+  case AST_NODE_KIND_CONST_DECL:
   case AST_NODE_KIND_REF:
   case AST_NODE_KIND_FUNC_TYPE:
   case AST_NODE_KIND_TYPE:
@@ -139,7 +139,7 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_STRUCT_DECL:    name = "StructDecl";    break;
   case AST_NODE_KIND_INTERFACE_DECL: name = "InterfaceDecl"; break;
   case AST_NODE_KIND_VAR_DECL:       name = "VarDecl";       break;
-  case AST_NODE_KIND_LET_DECL:       name = "LetDecl";       break;
+  case AST_NODE_KIND_CONST_DECL:     name = "ConstDecl";     break;
   case AST_NODE_KIND_REF:            name = "Ref";           break;
   case AST_NODE_KIND_FUNC_TYPE:      name = "FuncType";      break;
   case AST_NODE_KIND_TYPE:           name = "Type";          break;

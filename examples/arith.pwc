@@ -10,7 +10,7 @@ fn Int add_one(Int x) {
 }
 
 fn Int main() {
-  let a = 3;
+  const a = 3;
   var Int b;
   b = add_one(square(a));
   println(b); // 10

@@ -20,39 +20,39 @@ fn Void init(inout Result<T, E> self, E err) {
 }
 
 fn Result<Double, String> divide(Double a, Double b) {
-  if (b == 0) {
+  if b == 0 {
     return new Result<>("division by zero");
   }
   return new Result<>(a / b);
 }
 
 fn Void ok_test() {
-  let a = 10.0;
-  let b = 2.0;
-  let result = divide(a, b);
+  const a = 10.0;
+  const b = 2.0;
+  const result = divide(a, b);
   println(result.ok); // 5
   assert(!result.err.present);
 }
 
 fn Result<Double, String> ok_with_try_test() {
-  let a = 10.0;
-  let b = 2.0;
-  let result = try divide(a, b);
+  const a = 10.0;
+  const b = 2.0;
+  const result = try divide(a, b);
   println(result); // 5
 }
 
 fn Void error_test() {
-  let a = 10.0;
-  let b = 0.0;
-  let result = divide(a, b);
+  const a = 10.0;
+  const b = 0.0;
+  const result = divide(a, b);
   assert(result.err.present);
   println(result.err); // division by zero
 }
 
 fn Result<Double, String> error_with_try_test() {
-  let a = 10.0;
-  let b = 0.0;
-  let result = try divide(a, b); // Propagate error
+  const a = 10.0;
+  const b = 0.0;
+  const result = try divide(a, b); // Propagate error
   println(result);
 }
 

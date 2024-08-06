@@ -5,7 +5,7 @@ import "io";
 import "./logger" as log;
 
 fn Void main() {
-  let msg = "Hello, world!";
+  const msg = "Hello, world!";
   log.info(msg);
   println(msg);
 }

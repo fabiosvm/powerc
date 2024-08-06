@@ -2,7 +2,7 @@
 // if-expr.pwc
 
 fn Void main() {
-  let a = true;
-  let b = if a { 1 } else { 2 };
+  const a = true;
+  const b = if a { 1 } else { 2 };
   println(b); // 1
 }
