@@ -9,5 +9,5 @@ fn Int fib(Int n) {
 }
 
 fn Int main() {
-  println(fib(10)); // 55
+  println(string_from_int(fib(10)));
 }

@@ -2,10 +2,10 @@
 // block.pwc
 
 fn Int main() {
-  const a = 1;
+  var Int a = 1;
   {
-    const a = 2;
-    println(a); // 2
+    var Int a = 2;
+    println(string_from_int(a)); // 2
   }
-  println(a); // 1
+  println(string_from_int(a)); // 1
 }

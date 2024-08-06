@@ -7,7 +7,6 @@ struct S {
 
 struct T {
   S;
-  Int y;
 }
 
 fn Int main() {
