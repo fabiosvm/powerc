@@ -496,10 +496,8 @@ static inline AstNode *parse_let_decl(Parser *parser)
   consume(parser, TOKEN_KIND_SEMICOLON);
   AstNonLeafNode *letDecl = ast_nonleaf_node_new(AST_NODE_KIND_LET_DECL);
   ast_nonleaf_node_append_child(letDecl, ident);
-  AstNonLeafNode *assign = ast_nonleaf_node_new(AST_NODE_KIND_ASSIGN);
-  ast_nonleaf_node_append_child(assign, (AstNode *) letDecl);
-  ast_nonleaf_node_append_child(assign, expr);
-  return (AstNode *) assign;
+  ast_nonleaf_node_append_child(letDecl, expr);
+  return (AstNode *) letDecl;
 }
 
 static inline AstNode *parse_var_decl(Parser *parser)
@@ -511,20 +509,17 @@ static inline AstNode *parse_var_decl(Parser *parser)
   Token token = current(parser);
   next(parser);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
-  AstNonLeafNode *varDecl = ast_nonleaf_node_new(AST_NODE_KIND_VAR_DECL);
-  ast_nonleaf_node_append_child(varDecl, type);
-  ast_nonleaf_node_append_child(varDecl, ident);
+  AstNode *expr = NULL;
   if (match(parser, TOKEN_KIND_EQ))
   {
     next(parser);
-    AstNode *expr = parse_expr(parser);
-    consume(parser, TOKEN_KIND_SEMICOLON);
-    AstNonLeafNode *assign = ast_nonleaf_node_new(AST_NODE_KIND_ASSIGN);
-    ast_nonleaf_node_append_child(assign, (AstNode *) varDecl);
-    ast_nonleaf_node_append_child(assign, expr);
-    return (AstNode *) assign;
+    expr = parse_expr(parser);
   }
   consume(parser, TOKEN_KIND_SEMICOLON);
+  AstNonLeafNode *varDecl = ast_nonleaf_node_new(AST_NODE_KIND_VAR_DECL);
+  ast_nonleaf_node_append_child(varDecl, type);
+  ast_nonleaf_node_append_child(varDecl, ident);
+  ast_nonleaf_node_append_child(varDecl, expr);
   return (AstNode *) varDecl;
 }
 
@@ -666,13 +661,15 @@ static inline AstNode *parse_return_stmt(Parser *parser)
 {
   next(parser);
   AstNonLeafNode *retStmt = ast_nonleaf_node_new(AST_NODE_KIND_RETURN);
+  AstNode *expr = NULL;
   if (match(parser, TOKEN_KIND_SEMICOLON))
   {
     next(parser);
-    return (AstNode *) retStmt;
+    goto end;
   }
-  AstNode *expr = parse_expr(parser);
+  expr = parse_expr(parser);
   consume(parser, TOKEN_KIND_SEMICOLON);
+end:
   ast_nonleaf_node_append_child(retStmt, expr);
   return (AstNode *) retStmt;
 }
