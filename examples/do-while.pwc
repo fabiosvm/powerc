@@ -6,5 +6,5 @@ fn Int main() {
   do {
     a += 1;
   } while a < 5;
-  println(a); // 5
+  println(string_from_int(a)); // 5
 }

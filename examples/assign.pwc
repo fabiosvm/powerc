@@ -14,5 +14,5 @@ fn Int main() {
   a *= 3;
   a /= 2;
   a %= 2;
-  println(a); // 1 
+  println(string_from_int(a)); // 1 
 }

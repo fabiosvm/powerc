@@ -2,7 +2,7 @@
 // switch.pwc
 
 fn Int main() {
-  const a = 1;
+  var Int a = 1;
   switch a {
   case 1:
     println("a is 1");

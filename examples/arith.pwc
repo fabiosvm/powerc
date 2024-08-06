@@ -10,8 +10,8 @@ fn Int add_one(Int x) {
 }
 
 fn Int main() {
-  const a = 3;
+  var Int a = 3;
   var Int b;
   b = add_one(square(a));
-  println(b); // 10
+  println(string_from_int(b)); // 10
 }

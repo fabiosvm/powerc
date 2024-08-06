@@ -3,10 +3,11 @@
 
 fn Int main() {
   var Bool a = true;
+  var String b;
   if a {
-    a = false;
+    b = "true";
   } else {
-    a = true;
+    b = "false";
   }
-  println(a); // false
+  println(b); // true
 }

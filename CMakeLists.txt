@@ -16,7 +16,13 @@ endif()
 add_executable("${PROJECT_NAME}"
   "src/ast.c"
   "src/buffer.c"
+  "src/codegen.c"
   "src/compiler.c"
   "src/lexer.c"
   "src/parser.c"
+  "src/runtime.c"
+)
+
+target_include_directories("${PROJECT_NAME}"
+  PRIVATE "include"
 )

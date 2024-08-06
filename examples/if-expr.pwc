@@ -2,7 +2,7 @@
 // if-expr.pwc
 
 fn Int main() {
-  const a = true;
-  const b = if a { 1 } else { 2 };
-  println(b); // 1
+  var Bool a = true;
+  var Int b = if a { 1 } else { 2 };
+  println(string_from_int(b)); // 1
 }

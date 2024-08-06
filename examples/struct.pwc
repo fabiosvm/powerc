@@ -1,0 +1,15 @@
+
+// struct.pwc
+
+struct Point {
+  Int x;
+  Int y;
+}
+
+fn Int main() {
+  var Point p;
+  p.x = 1;
+  p.y = 2;
+  println(string_from_int(p.x));
+  println(string_from_int(p.y));
+}

@@ -6,5 +6,5 @@ fn Int main() {
   if true {
     a = 1;
   }
-  println(a); // 1
+  println(string_from_int(a)); // 1
 }
