@@ -33,7 +33,7 @@ static inline void unexpected_token_error(Parser *parser);
 static inline AstNode *parse_module(Parser *parser);
 static inline AstNode *parse_decl(Parser *parser);
 static inline AstNode *parse_import_decl(Parser *parser);
-static inline AstNode *parse_type_decl(Parser *parser);
+static inline AstNode *parse_typealias_decl(Parser *parser);
 static inline AstNode *parse_type_params(Parser *parser);
 static inline AstNode *parse_type_param(Parser *parser);
 static inline AstNode *parse_type(Parser *parser);
@@ -112,8 +112,8 @@ static inline AstNode *parse_decl(Parser *parser)
 {
   if (match(parser, TOKEN_KIND_IMPORT_KW))
     return parse_import_decl(parser);
-  if (match(parser, TOKEN_KIND_TYPE_KW))
-    return parse_type_decl(parser);
+  if (match(parser, TOKEN_KIND_TYPEALIAS_KW))
+    return parse_typealias_decl(parser);
   if (match(parser, TOKEN_KIND_FN_KW))
     return parse_func_decl(parser, false);
   if (match(parser, TOKEN_KIND_STRUCT_KW))
@@ -154,23 +154,23 @@ static inline AstNode *parse_import_decl(Parser *parser)
   return (AstNode *) rename;
 }
 
-static inline AstNode *parse_type_decl(Parser *parser)
+static inline AstNode *parse_typealias_decl(Parser *parser)
 {
   next(parser);
   if (!match(parser, TOKEN_KIND_IDENT))
     unexpected_token_error(parser);
   Token token = current(parser);
   next(parser);
-  AstNonLeafNode *typeDecl = ast_nonleaf_node_new(AST_NODE_KIND_TYPE_DECL);
+  AstNonLeafNode *typealiasDecl = ast_nonleaf_node_new(AST_NODE_KIND_TYPEALIAS_DECL);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
   AstNode *typeParams = parse_type_params(parser);
-  ast_nonleaf_node_append_child(typeDecl, ident);
-  ast_nonleaf_node_append_child(typeDecl, typeParams);
+  ast_nonleaf_node_append_child(typealiasDecl, ident);
+  ast_nonleaf_node_append_child(typealiasDecl, typeParams);
   consume(parser, TOKEN_KIND_EQ);
   AstNode *type = parse_type(parser);
   consume(parser, TOKEN_KIND_SEMICOLON);
-  ast_nonleaf_node_append_child(typeDecl, type);
-  return (AstNode *) typeDecl;
+  ast_nonleaf_node_append_child(typealiasDecl, type);
+  return (AstNode *) typealiasDecl;
 }
 
 static inline AstNode *parse_type_params(Parser *parser)
@@ -525,8 +525,8 @@ static inline AstNode *parse_var_decl(Parser *parser)
 
 static inline AstNode *parse_stmt(Parser *parser)
 {
-  if (match(parser, TOKEN_KIND_TYPE_KW))
-    return parse_type_decl(parser);
+  if (match(parser, TOKEN_KIND_TYPEALIAS_KW))
+    return parse_typealias_decl(parser);
   if (match(parser, TOKEN_KIND_FN_KW))
     return parse_func_decl(parser, false);
   if (match(parser, TOKEN_KIND_STRUCT_KW))

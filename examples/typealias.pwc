@@ -1,7 +1,7 @@
 
-// type.pwc
+// typealias.pwc
 
-type Currency = Float;
+typealias Currency = Float;
 
 fn Int main() {
   var Currency a;

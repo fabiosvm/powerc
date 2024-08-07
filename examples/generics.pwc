@@ -7,7 +7,7 @@ interface Accountable<T: Number> {
   T balance(Self self);
 }
 
-type Money<T> = Accountable<T>;
+typealias Money<T> = Accountable<T>;
 
 struct MoneyImpl<T: Number> {
   T balance;

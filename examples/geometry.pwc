@@ -79,7 +79,7 @@ interface Perimeter {
   Double perimeter(Self self);
 }
 
-type Shape = Area + Perimeter;
+typealias Shape = Area + Perimeter;
 
 fn Int main() {
   // Points

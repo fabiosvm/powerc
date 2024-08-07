@@ -30,7 +30,7 @@ static inline void node_print(AstNode *node, int level)
   case AST_NODE_KIND_MODULE:
   case AST_NODE_KIND_IMPORT_DECL:
   case AST_NODE_KIND_RENAME:
-  case AST_NODE_KIND_TYPE_DECL:
+  case AST_NODE_KIND_TYPEALIAS_DECL:
   case AST_NODE_KIND_TYPE_PARAMS:
   case AST_NODE_KIND_CONSTRAINT:
   case AST_NODE_KIND_INTERSECT:
@@ -131,7 +131,7 @@ const char *ast_node_kind_name(AstNodeKind kind)
   case AST_NODE_KIND_MODULE:         name = "Module";        break;
   case AST_NODE_KIND_IMPORT_DECL:    name = "ImportDecl";    break;
   case AST_NODE_KIND_RENAME:         name = "Rename";        break;
-  case AST_NODE_KIND_TYPE_DECL:      name = "TypeDecl";      break;
+  case AST_NODE_KIND_TYPEALIAS_DECL: name = "TypealiasDecl"; break;
   case AST_NODE_KIND_TYPE_PARAMS:    name = "TypeParams";    break;
   case AST_NODE_KIND_CONSTRAINT:     name = "Constraint";    break;
   case AST_NODE_KIND_INTERSECT:      name = "Intersect";     break;

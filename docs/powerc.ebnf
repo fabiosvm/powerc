@@ -2,7 +2,7 @@
 module          ::= decl* EOF
 
 decl            ::= import_decl
-                  | type_decl
+                  | typealias_decl
                   | func_decl
                   | struct_decl
                   | interface_decl
@@ -10,7 +10,7 @@ decl            ::= import_decl
 
 import_decl     ::= "import" STRING ( "as" IDENT )? ";"
 
-type_decl       ::= "type" IDENT type_params? "=" type ";"
+typealias_decl  ::= "typealias" IDENT type_params? "=" type ";"
 
 type_params     ::= "<" type_param ( "," type_param )* ">"
 
@@ -41,7 +41,7 @@ method_proto    ::= IDENT func_sig ";"
 
 const_decl      ::= "const" IDENT "=" expr ";"
 
-stmt            ::= type_decl
+stmt            ::= typealias_decl
                   | func_decl
                   | struct_decl
                   | interface_decl

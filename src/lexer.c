@@ -301,7 +301,7 @@ const char *token_kind_name(TokenKind kind)
   case TOKEN_KIND_SWITCH_KW:    name = "SwitchKw";    break;
   case TOKEN_KIND_TRUE_KW:      name = "TrueKw";      break;
   case TOKEN_KIND_TRY_KW:       name = "TryKw";       break;
-  case TOKEN_KIND_TYPE_KW:      name = "TypeKw";      break;
+  case TOKEN_KIND_TYPEALIAS_KW: name = "TypealiasKw"; break;
   case TOKEN_KIND_VAR_KW:       name = "VarKw";       break;
   case TOKEN_KIND_VOID_KW:      name = "VoidKw";      break;
   case TOKEN_KIND_WHILE_KW:     name = "WhileKw";     break;
@@ -392,7 +392,7 @@ void lexer_next(Lexer *lex)
   if (match_keyword(lex, "switch", TOKEN_KIND_SWITCH_KW)) return;
   if (match_keyword(lex, "true", TOKEN_KIND_TRUE_KW)) return;
   if (match_keyword(lex, "try", TOKEN_KIND_TRY_KW)) return;
-  if (match_keyword(lex, "type", TOKEN_KIND_TYPE_KW)) return;
+  if (match_keyword(lex, "typealias", TOKEN_KIND_TYPEALIAS_KW)) return;
   if (match_keyword(lex, "var", TOKEN_KIND_VAR_KW)) return;
   if (match_keyword(lex, "void", TOKEN_KIND_VOID_KW)) return;
   if (match_keyword(lex, "while", TOKEN_KIND_WHILE_KW)) return;
