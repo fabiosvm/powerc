@@ -37,7 +37,6 @@ static inline AstNode *parse_typealias_decl(Parser *parser);
 static inline AstNode *parse_type_params(Parser *parser);
 static inline AstNode *parse_type_param(Parser *parser);
 static inline AstNode *parse_type(Parser *parser);
-static inline AstNode *parse_prim_type(Parser *parser);
 static inline AstNode *parse_func_type(Parser *parser);
 static inline AstNode *parse_param_type(Parser *parser);
 static inline AstNode *parse_type_def(Parser *parser);
@@ -45,9 +44,9 @@ static inline AstNode *parse_func_decl(Parser *parser, bool isAnon);
 static inline AstNode *parse_param(Parser *parser);
 static inline AstNode *parse_block(Parser *parser);
 static inline AstNode *parse_struct_decl(Parser *parser);
-static inline AstNode *parse_field(Parser *parser);
+static inline AstNode *parse_struct_member(Parser *parser);
 static inline AstNode *parse_interface_decl(Parser *parser);
-static inline AstNode *parse_method_proto(Parser *parser);
+static inline AstNode *parse_interface_member(Parser *parser);
 static inline AstNode *parse_const_decl(Parser *parser);
 static inline AstNode *parse_var_decl(Parser *parser);
 static inline AstNode *parse_stmt(Parser *parser);
@@ -209,21 +208,6 @@ static inline AstNode *parse_type_param(Parser *parser)
 }
 
 static inline AstNode *parse_type(Parser *parser)
-{
-  AstNode *lhs = parse_prim_type(parser);
-  while (match(parser, TOKEN_KIND_PLUS))
-  {
-    next(parser);
-    AstNode *rhs = parse_prim_type(parser);
-    AstNonLeafNode *type = ast_nonleaf_node_new(AST_NODE_KIND_INTERSECT);
-    ast_nonleaf_node_append_child(type, lhs);
-    ast_nonleaf_node_append_child(type, rhs);
-    lhs = (AstNode *) type;
-  }
-  return lhs;
-}
-
-static inline AstNode *parse_prim_type(Parser *parser)
 {
   if (match(parser, TOKEN_KIND_FN_KW))
     return parse_func_type(parser);
@@ -387,18 +371,18 @@ static inline AstNode *parse_struct_decl(Parser *parser)
     next(parser);
     return (AstNode *) structDecl;
   }
-  AstNode *field = parse_field(parser);
-  ast_nonleaf_node_append_child(structDecl, field);
+  AstNode *member = parse_struct_member(parser);
+  ast_nonleaf_node_append_child(structDecl, member);
   while (!match(parser, TOKEN_KIND_RBRACE))
   {
-    field = parse_field(parser);
-    ast_nonleaf_node_append_child(structDecl, field);
+    member = parse_struct_member(parser);
+    ast_nonleaf_node_append_child(structDecl, member);
   }
   next(parser);
   return (AstNode *) structDecl;
 }
 
-static inline AstNode *parse_field(Parser *parser)
+static inline AstNode *parse_struct_member(Parser *parser)
 {
   AstNode *type = parse_type(parser);
   if (!match(parser, TOKEN_KIND_IDENT))
@@ -407,10 +391,10 @@ static inline AstNode *parse_field(Parser *parser)
   next(parser);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
   consume(parser, TOKEN_KIND_SEMICOLON);
-  AstNonLeafNode *field = ast_nonleaf_node_new(AST_NODE_KIND_VAR_DECL);
-  ast_nonleaf_node_append_child(field, type);
-  ast_nonleaf_node_append_child(field, ident);
-  return (AstNode *) field;
+  AstNonLeafNode *member = ast_nonleaf_node_new(AST_NODE_KIND_VAR_DECL);
+  ast_nonleaf_node_append_child(member, type);
+  ast_nonleaf_node_append_child(member, ident);
+  return (AstNode *) member;
 }
 
 static inline AstNode *parse_interface_decl(Parser *parser)
@@ -425,44 +409,42 @@ static inline AstNode *parse_interface_decl(Parser *parser)
   AstNode *typeParams = parse_type_params(parser);
   ast_nonleaf_node_append_child(interfaceDecl, ident);
   ast_nonleaf_node_append_child(interfaceDecl, typeParams);
-  AstNode *type = NULL;
-  if (match(parser, TOKEN_KIND_COLON))
-  {
-    next(parser);
-    type = parse_type(parser);
-  }
-  ast_nonleaf_node_append_child(interfaceDecl, type);
   consume(parser, TOKEN_KIND_LBRACE);
   if (match(parser, TOKEN_KIND_RBRACE))
   {
     next(parser);
     return (AstNode *) interfaceDecl;
   }
-  AstNode *methodProto = parse_method_proto(parser);
-  ast_nonleaf_node_append_child(interfaceDecl, methodProto);
+  AstNode *member = parse_interface_member(parser);
+  ast_nonleaf_node_append_child(interfaceDecl, member);
   while (!match(parser, TOKEN_KIND_RBRACE))
   {
-    methodProto = parse_method_proto(parser);
-    ast_nonleaf_node_append_child(interfaceDecl, methodProto);
+    member = parse_interface_member(parser);
+    ast_nonleaf_node_append_child(interfaceDecl, member);
   }
   next(parser);
   return (AstNode *) interfaceDecl;
 }
 
-static inline AstNode *parse_method_proto(Parser *parser)
+static inline AstNode *parse_interface_member(Parser *parser)
 {
   if (!match(parser, TOKEN_KIND_IDENT))
     unexpected_token_error(parser);
   Token token = current(parser);
   next(parser);
-  AstNode *retType = parse_type(parser);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
+  if (match(parser, TOKEN_KIND_SEMICOLON))
+  {
+    next(parser);
+    return (AstNode *) ident;
+  }
+  AstNode *retType = parse_type(parser);
   consume(parser, TOKEN_KIND_LPAREN);
   AstNonLeafNode *params = ast_nonleaf_node_new(AST_NODE_KIND_PARAMS);
   if (match(parser, TOKEN_KIND_RPAREN))
   {
     next(parser);
-    goto end;
+    goto proto;
   }
   AstNode *param = parse_param(parser);
   ast_nonleaf_node_append_child(params, param);
@@ -473,14 +455,14 @@ static inline AstNode *parse_method_proto(Parser *parser)
     ast_nonleaf_node_append_child(params, param);
   }
   consume(parser, TOKEN_KIND_RPAREN);
-end:
+proto:
   consume(parser, TOKEN_KIND_SEMICOLON);
-  AstNonLeafNode *methodProto = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_DECL);
-  ast_nonleaf_node_append_child(methodProto, retType);
-  ast_nonleaf_node_append_child(methodProto, ident);
-  ast_nonleaf_node_append_child(methodProto, (AstNode *) params);
-  ast_nonleaf_node_append_child(methodProto, NULL);
-  return (AstNode *) methodProto;
+  AstNonLeafNode *member = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_DECL);
+  ast_nonleaf_node_append_child(member, retType);
+  ast_nonleaf_node_append_child(member, ident);
+  ast_nonleaf_node_append_child(member, (AstNode *) params);
+  ast_nonleaf_node_append_child(member, NULL);
+  return (AstNode *) member;
 }
 
 static inline AstNode *parse_const_decl(Parser *parser)

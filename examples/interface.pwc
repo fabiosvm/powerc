@@ -9,7 +9,9 @@ interface J {
   Void g(Self self);
 }
 
-interface K: I + J {
+interface K {
+  I;
+  J;
   Void h(Self self);
 }
 

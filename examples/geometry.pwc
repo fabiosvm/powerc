@@ -71,15 +71,10 @@ fn Double area(Rect self) {
 
 // Shape
 
-interface Area {
+interface Shape {
   Double area(Self self);
-}
-
-interface Perimeter {
   Double perimeter(Self self);
 }
-
-typealias Shape = Area + Perimeter;
 
 fn Int main() {
   // Points
