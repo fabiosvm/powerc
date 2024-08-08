@@ -220,7 +220,7 @@ static inline AstNode *parse_type(Parser *parser)
 static inline AstNode *parse_func_type(Parser *parser)
 {
   next(parser);
-  AstNode *retType = parse_type(parser);
+  AstNode *type = parse_type(parser);
   consume(parser, TOKEN_KIND_LPAREN);
   AstNonLeafNode *params = ast_nonleaf_node_new(AST_NODE_KIND_PARAMS);
   if (match(parser, TOKEN_KIND_RPAREN))
@@ -240,7 +240,7 @@ static inline AstNode *parse_func_type(Parser *parser)
 AstNonLeafNode *funcType;
 end:
   funcType = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_TYPE);
-  ast_nonleaf_node_append_child(funcType, retType);
+  ast_nonleaf_node_append_child(funcType, type);
   ast_nonleaf_node_append_child(funcType, (AstNode *) params);
   return (AstNode *) funcType;
 }
@@ -288,7 +288,7 @@ static inline AstNode *parse_type_def(Parser *parser)
 static inline AstNode *parse_func_decl(Parser *parser, bool isAnon)
 {
   next(parser);
-  AstNode *retType = parse_type(parser);
+  AstNode *type = parse_type(parser);
   AstNode *ident = NULL;
   if (!isAnon)
   {
@@ -319,7 +319,7 @@ end:
     unexpected_token_error(parser);
   AstNode *block = parse_block(parser);
   AstNonLeafNode *funcDecl = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_DECL);
-  ast_nonleaf_node_append_child(funcDecl, retType);
+  ast_nonleaf_node_append_child(funcDecl, type);
   ast_nonleaf_node_append_child(funcDecl, ident);
   ast_nonleaf_node_append_child(funcDecl, (AstNode *) params);
   ast_nonleaf_node_append_child(funcDecl, block);
@@ -428,17 +428,17 @@ static inline AstNode *parse_interface_decl(Parser *parser)
 
 static inline AstNode *parse_interface_member(Parser *parser)
 {
+  AstNode *type = parse_type(parser);
   if (!match(parser, TOKEN_KIND_IDENT))
-    unexpected_token_error(parser);
+  {
+    consume(parser, TOKEN_KIND_SEMICOLON);
+    AstNonLeafNode *member = ast_nonleaf_node_new(AST_NODE_KIND_TYPE);
+    ast_nonleaf_node_append_child(member, type);
+    return (AstNode *) member;
+  }
   Token token = current(parser);
   next(parser);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
-  if (match(parser, TOKEN_KIND_SEMICOLON))
-  {
-    next(parser);
-    return (AstNode *) ident;
-  }
-  AstNode *retType = parse_type(parser);
   consume(parser, TOKEN_KIND_LPAREN);
   AstNonLeafNode *params = ast_nonleaf_node_new(AST_NODE_KIND_PARAMS);
   if (match(parser, TOKEN_KIND_RPAREN))
@@ -458,7 +458,7 @@ static inline AstNode *parse_interface_member(Parser *parser)
 proto:
   consume(parser, TOKEN_KIND_SEMICOLON);
   AstNonLeafNode *member = ast_nonleaf_node_new(AST_NODE_KIND_FUNC_DECL);
-  ast_nonleaf_node_append_child(member, retType);
+  ast_nonleaf_node_append_child(member, type);
   ast_nonleaf_node_append_child(member, ident);
   ast_nonleaf_node_append_child(member, (AstNode *) params);
   ast_nonleaf_node_append_child(member, NULL);
