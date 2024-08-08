@@ -34,8 +34,8 @@ static inline AstNode *parse_module(Parser *parser);
 static inline AstNode *parse_decl(Parser *parser);
 static inline AstNode *parse_import_decl(Parser *parser);
 static inline AstNode *parse_typealias_decl(Parser *parser);
-static inline AstNode *parse_type_params(Parser *parser);
-static inline AstNode *parse_type_param(Parser *parser);
+static inline AstNode *parse_poly_params(Parser *parser);
+static inline AstNode *parse_poly_param(Parser *parser);
 static inline AstNode *parse_type(Parser *parser);
 static inline AstNode *parse_func_type(Parser *parser);
 static inline AstNode *parse_param_type(Parser *parser);
@@ -162,9 +162,9 @@ static inline AstNode *parse_typealias_decl(Parser *parser)
   next(parser);
   AstNonLeafNode *typealiasDecl = ast_nonleaf_node_new(AST_NODE_KIND_TYPEALIAS_DECL);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
-  AstNode *typeParams = parse_type_params(parser);
+  AstNode *polyParams = parse_poly_params(parser);
   ast_nonleaf_node_append_child(typealiasDecl, ident);
-  ast_nonleaf_node_append_child(typealiasDecl, typeParams);
+  ast_nonleaf_node_append_child(typealiasDecl, polyParams);
   consume(parser, TOKEN_KIND_EQ);
   AstNode *type = parse_type(parser);
   consume(parser, TOKEN_KIND_SEMICOLON);
@@ -172,25 +172,25 @@ static inline AstNode *parse_typealias_decl(Parser *parser)
   return (AstNode *) typealiasDecl;
 }
 
-static inline AstNode *parse_type_params(Parser *parser)
+static inline AstNode *parse_poly_params(Parser *parser)
 {
   if (!match(parser, TOKEN_KIND_LT))
     return NULL;
   next(parser);
-  AstNonLeafNode *typeParams = ast_nonleaf_node_new(AST_NODE_KIND_TYPE_PARAMS);
-  AstNode *typeParam = parse_type_param(parser);
-  ast_nonleaf_node_append_child(typeParams, typeParam);
+  AstNonLeafNode *polyParams = ast_nonleaf_node_new(AST_NODE_KIND_POLY_PARAMS);
+  AstNode *polyParam = parse_poly_param(parser);
+  ast_nonleaf_node_append_child(polyParams, polyParam);
   while (match(parser, TOKEN_KIND_COMMA))
   {
     next(parser);
-    typeParam = parse_type_param(parser);
-    ast_nonleaf_node_append_child(typeParams, typeParam);
+    polyParam = parse_poly_param(parser);
+    ast_nonleaf_node_append_child(polyParams, polyParam);
   }
   consume(parser, TOKEN_KIND_GT);
-  return (AstNode *) typeParams;
+  return (AstNode *) polyParams;
 }
 
-static inline AstNode *parse_type_param(Parser *parser)
+static inline AstNode *parse_poly_param(Parser *parser)
 {
   if (!match(parser, TOKEN_KIND_IDENT))
     unexpected_token_error(parser);
@@ -362,9 +362,9 @@ static inline AstNode *parse_struct_decl(Parser *parser)
   next(parser);
   AstNonLeafNode *structDecl = ast_nonleaf_node_new(AST_NODE_KIND_STRUCT_DECL);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
-  AstNode *typeParams = parse_type_params(parser);
+  AstNode *polyParams = parse_poly_params(parser);
   ast_nonleaf_node_append_child(structDecl, ident);
-  ast_nonleaf_node_append_child(structDecl, typeParams);
+  ast_nonleaf_node_append_child(structDecl, polyParams);
   consume(parser, TOKEN_KIND_LBRACE);
   if (match(parser, TOKEN_KIND_RBRACE))
   {
@@ -386,7 +386,12 @@ static inline AstNode *parse_struct_member(Parser *parser)
 {
   AstNode *type = parse_type(parser);
   if (!match(parser, TOKEN_KIND_IDENT))
-    unexpected_token_error(parser);
+  {
+    consume(parser, TOKEN_KIND_SEMICOLON);
+    AstNonLeafNode *member = ast_nonleaf_node_new(AST_NODE_KIND_TYPE);
+    ast_nonleaf_node_append_child(member, type);
+    return (AstNode *) member;
+  }
   Token token = current(parser);
   next(parser);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
@@ -406,9 +411,9 @@ static inline AstNode *parse_interface_decl(Parser *parser)
   next(parser);
   AstNonLeafNode *interfaceDecl = ast_nonleaf_node_new(AST_NODE_KIND_INTERFACE_DECL);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);
-  AstNode *typeParams = parse_type_params(parser);
+  AstNode *polyParams = parse_poly_params(parser);
   ast_nonleaf_node_append_child(interfaceDecl, ident);
-  ast_nonleaf_node_append_child(interfaceDecl, typeParams);
+  ast_nonleaf_node_append_child(interfaceDecl, polyParams);
   consume(parser, TOKEN_KIND_LBRACE);
   if (match(parser, TOKEN_KIND_RBRACE))
   {

@@ -10,11 +10,11 @@ decl             ::= import_decl
 
 import_decl      ::= "import" STRING ( "as" IDENT )? ";"
 
-typealias_decl   ::= "typealias" IDENT type_params? "=" type ";"
+typealias_decl   ::= "typealias" IDENT poly_params? "=" type ";"
 
-type_params      ::= "<" type_param ( "," type_param )* ">"
+poly_params      ::= "<" poly_param ( "," poly_param )* ">"
 
-type_param       ::= IDENT ( ":" type )?
+poly_param       ::= IDENT ( ":" type )?
 
 type             ::= "fn" type "(" ( param_type ( "," param_type )* )? ")"
                    | IDENT ( "<" ( type ( "," type )* )? ">" )?
@@ -29,11 +29,11 @@ param            ::= param_type IDENT
 
 block            ::= "{" stmt* "}"
 
-struct_decl      ::= "struct" IDENT type_params? "{" struct_member* "}"
+struct_decl      ::= "struct" IDENT poly_params? "{" struct_member* "}"
 
-struct_member    ::= type IDENT ";"
+struct_member    ::= type IDENT? ";"
 
-interface_decl   ::= "interface" IDENT type_params? "{" interface_member* "}"
+interface_decl   ::= "interface" IDENT poly_params? "{" interface_member* "}"
 
 interface_member ::= type ( IDENT params )? ";"
 

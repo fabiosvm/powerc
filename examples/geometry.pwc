@@ -8,7 +8,7 @@ struct Point {
   Double y;
 }
 
-fn Void init(Point self, Double x, Double y) {
+fn Void init(inout Point self, Double x, Double y) {
   self.x = x;
   self.y = y;
 }
@@ -26,11 +26,11 @@ struct Circle {
   Double radius;
 }
 
-fn Void init(Circle self, Double radius) {
+fn Void init(inout Circle self, Double radius) {
   init(self, new Point(0, 0), radius);
 }
 
-fn Void init(Circle self, Point center, Double radius) {
+fn Void init(inout Circle self, Point center, Double radius) {
   self.center = center;
   self.radius = radius;
 }
@@ -51,11 +51,11 @@ struct Rect {
   Double height;
 }
 
-fn Void init(Rect self, Double width, Double height) {
+fn Void init(inout Rect self, Double width, Double height) {
   init(self, new Point(0, 0), width, height);
 }
 
-fn Void init(Rect self, Point center, Double width, Double height) {
+fn Void init(inout Rect self, Point center, Double width, Double height) {
   self.center = center;
   self.width = width;
   self.height = height;
