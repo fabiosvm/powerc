@@ -386,7 +386,12 @@ static inline AstNode *parse_struct_member(Parser *parser)
 {
   AstNode *type = parse_type(parser);
   if (!match(parser, TOKEN_KIND_IDENT))
-    unexpected_token_error(parser);
+  {
+    consume(parser, TOKEN_KIND_SEMICOLON);
+    AstNonLeafNode *member = ast_nonleaf_node_new(AST_NODE_KIND_TYPE);
+    ast_nonleaf_node_append_child(member, type);
+    return (AstNode *) member;
+  }
   Token token = current(parser);
   next(parser);
   AstNode *ident = (AstNode *) ast_leaf_node_new(AST_NODE_KIND_IDENT, token);

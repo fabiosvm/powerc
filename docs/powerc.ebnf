@@ -31,7 +31,7 @@ block            ::= "{" stmt* "}"
 
 struct_decl      ::= "struct" IDENT type_params? "{" struct_member* "}"
 
-struct_member    ::= type IDENT ";"
+struct_member    ::= type IDENT? ";"
 
 interface_decl   ::= "interface" IDENT type_params? "{" interface_member* "}"
 

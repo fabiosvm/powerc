@@ -1,0 +1,19 @@
+
+// struct.pwc
+
+struct S {
+  Int x;
+}
+
+struct T {
+  S;
+  Int y;
+}
+
+fn Int main() {
+  var T t;
+  t.S.x = 1;
+  t.y = 2;
+  println(string_from_int(t.S.x));
+  println(string_from_int(t.y));
+}
