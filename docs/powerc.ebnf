@@ -1,108 +1,106 @@
 
-module          ::= decl* EOF
+module           ::= decl* EOF
 
-decl            ::= import_decl
-                  | type_decl
-                  | func_decl
-                  | struct_decl
-                  | interface_decl
-                  | const_decl
+decl             ::= import_decl
+                   | typealias_decl
+                   | func_decl
+                   | struct_decl
+                   | interface_decl
+                   | const_decl
 
-import_decl     ::= "import" STRING ( "as" IDENT )? ";"
+import_decl      ::= "import" STRING ( "as" IDENT )? ";"
 
-type_decl       ::= "type" IDENT type_params? "=" type ";"
+typealias_decl   ::= "typealias" IDENT type_params? "=" type ";"
 
-type_params     ::= "<" type_param ( "," type_param )* ">"
+type_params      ::= "<" type_param ( "," type_param )* ">"
 
-type_param      ::= IDENT ( ":" type )?
+type_param       ::= IDENT ( ":" type )?
 
-type            ::= prim_type ( "+" prim_type )*
+type             ::= "fn" type "(" ( param_type ( "," param_type )* )? ")"
+                   | IDENT ( "<" ( type ( "," type )* )? ">" )?
 
-prim_type       ::= "fn" type "(" ( param_type ( "," param_type )* )? ")"
-                  | IDENT ( "<" ( type ( "," type )* )? ">" )?
+param_type       ::= "inout"? type
 
-param_type      ::= "inout"? type
+func_decl        ::= "fn" IDENT func_sig block
 
-func_decl       ::= "fn" IDENT func_sig block
+func_sig         ::= type "(" ( param ( "," param )* )? ")"
 
-func_sig        ::= type "(" ( param ( "," param )* )? ")"
+param            ::= param_type IDENT
 
-param           ::= param_type IDENT
+block            ::= "{" stmt* "}"
 
-block           ::= "{" stmt* "}"
+struct_decl      ::= "struct" IDENT type_params? "{" struct_member* "}"
 
-struct_decl     ::= "struct" IDENT type_params? "{" field* "}"
+struct_member    ::= type IDENT ";"
 
-field           ::= type IDENT ";"
+interface_decl   ::= "interface" IDENT type_params? "{" interface_member* "}"
 
-interface_decl  ::= "interface" IDENT type_params? ( ":" type )? "{" method_proto* "}"
+interface_member ::= IDENT func_sig? ";"
 
-method_proto    ::= IDENT func_sig ";"
+const_decl       ::= "const" IDENT "=" expr ";"
 
-const_decl      ::= "const" IDENT "=" expr ";"
+stmt             ::= typealias_decl
+                   | func_decl
+                   | struct_decl
+                   | interface_decl
+                   | const_decl
+                   | var_decl
+                   | block
+                   | "if" expr block ( "else" block )?
+                   | "switch" expr "{" case* default? "}"
+                   | "while" expr block
+                   | "do" block "while" expr ";"
+                   | "for" IDENT "in" expr block
+                   | "break" ";"
+                   | "continue" ";"
+                   | "return" expr? ";"
+                   | expr ";"
 
-stmt            ::= type_decl
-                  | func_decl
-                  | struct_decl
-                  | interface_decl
-                  | const_decl
-                  | var_decl
-                  | block
-                  | "if" expr block ( "else" block )?
-                  | "switch" expr "{" case* default? "}"
-                  | "while" expr block
-                  | "do" block "while" expr ";"
-                  | "for" IDENT "in" expr block
-                  | "break" ";"
-                  | "continue" ";"
-                  | "return" expr? ";"
-                  | expr ";"
+var_decl         ::= "var" type IDENT ( "=" expr )? ";"
 
-var_decl        ::= "var" type IDENT ( "=" expr )? ";"
+case             ::= "case" expr ":" stmt*
 
-case            ::= "case" expr ":" stmt*
+default          ::= "default" ":" stmt*
 
-default         ::= "default" ":" stmt*
+expr             ::= or_expr ( assign_op expr )?
 
-expr            ::= or_expr ( assign_op expr )?
+assign_op        ::= "=" | "|=" | "^=" | "&=" | "<<=" | ">>=" 
+                   | "+=" | "-=" | "*=" | "/=" | "%="
 
-assign_op       ::= "=" | "|=" | "^=" | "&=" | "<<=" | ">>=" 
-                  | "+=" | "-=" | "*=" | "/=" | "%="
+or_expr          ::= and_expr ( "||" and_expr )*
 
-or_expr         ::= and_expr ( "||" and_expr )*
+and_expr         ::= bor_expr ( "&&" bor_expr )*
 
-and_expr        ::= bor_expr ( "&&" bor_expr )*
+bor_expr         ::= bxor_expr ( "|" bxor_expr )*
 
-bor_expr        ::= bxor_expr ( "|" bxor_expr )*
+bxor_expr        ::= band_expr ( "^" band_expr )*
 
-bxor_expr       ::= band_expr ( "^" band_expr )*
+band_expr        ::= eq_expr ( "&" eq_expr )*
 
-band_expr       ::= eq_expr ( "&" eq_expr )*
+eq_expr          ::= comp_expr ( ( "==" | "!=" ) comp_expr )*
 
-eq_expr         ::= comp_expr ( ( "==" | "!=" ) comp_expr )*
+comp_expr        ::= shift_expr ( ( "<" | "<=" | ">" | ">=" ) shift_expr )*
 
-comp_expr       ::= shift_expr ( ( "<" | "<=" | ">" | ">=" ) shift_expr )*
+shift_expr       ::= range_expr ( ( "<<" | ">>" ) range_expr )*
 
-shift_expr      ::= range_expr ( ( "<<" | ">>" ) range_expr )*
+range_expr       ::= add_expr ( ".." add_expr )?
 
-range_expr      ::= add_expr ( ".." add_expr )?
+add_expr         ::= mul_expr ( ( "+" | "-" ) mul_expr )*
 
-add_expr        ::= mul_expr ( ( "+" | "-" ) mul_expr )*
+mul_expr         ::= unary_expr ( ( "*" | "/" | "%" ) unary_expr )*
 
-mul_expr        ::= unary_expr ( ( "*" | "/" | "%" ) unary_expr )*
+unary_expr       ::= ( "!" | "-" | "~" ) unary_expr | prim_expr
 
-unary_expr      ::= ( "!" | "-" | "~" ) unary_expr | prim_expr
+prim_expr        ::= "void" | "false" | "true" | INT | FLOAT | CHAR | STRING
+                   | "[" ( expr ( "," expr )* )? "]"
+                   | "fn" func_sig block
+                   | "new" type call
+                   | "&" IDENT subscr*
+                   | IDENT ( subscr | call )*
+                   | "try" expr
+                   | "if" expr "{" expr "}" "else" "{" expr "}"
+                   | "(" expr ")"
 
-prim_expr       ::= "void" | "false" | "true" | INT | FLOAT | CHAR | STRING
-                  | "[" ( expr ( "," expr )* )? "]"
-                  | "fn" func_sig block
-                  | "new" type call
-                  | "&" IDENT subscr*
-                  | IDENT ( subscr | call )*
-                  | "try" expr
-                  | "if" expr "{" expr "}" "else" "{" expr "}"
-                  | "(" expr ")"
+call             ::= "(" ( expr ( "," expr )* )? ")"
 
-call            ::= "(" ( expr ( "," expr )* )? ")"
-
-subscr          ::= "[" expr "]" | "." IDENT
+subscr           ::= "[" expr "]" | "." IDENT
